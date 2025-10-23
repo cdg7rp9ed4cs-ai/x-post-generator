@@ -72,6 +72,7 @@
             outline: none;
         }
 
+        /* ライトモード: 白背景 + 黒文字 + 黒カレンダー */
         input[type="datetime-local"] {
             width: 100%;
             background-color: #fff !important;
@@ -86,7 +87,7 @@
         }
 
         input[type="datetime-local"]::-webkit-calendar-picker-indicator {
-            filter: invert(1);
+            filter: invert(0);
             cursor: pointer;
         }
 
@@ -108,6 +109,40 @@
         input[type="datetime-local"]::-webkit-datetime-edit-hour-field,
         input[type="datetime-local"]::-webkit-datetime-edit-minute-field {
             color: #000;
+        }
+
+        /* ダークモード: 黒背景 + 白文字 + 白カレンダー */
+        @media (prefers-color-scheme: dark) {
+            input[type="datetime-local"] {
+                background-color: #000 !important;
+                border: 1px solid #2f3336;
+                color: #fff !important;
+                color-scheme: dark;
+            }
+
+            input[type="datetime-local"]::-webkit-calendar-picker-indicator {
+                filter: invert(1);
+            }
+
+            input[type="datetime-local"]::-webkit-datetime-edit {
+                color: #fff;
+            }
+
+            input[type="datetime-local"]::-webkit-datetime-edit-fields-wrapper {
+                background-color: #000;
+            }
+
+            input[type="datetime-local"]::-webkit-datetime-edit-text {
+                color: #fff;
+            }
+
+            input[type="datetime-local"]::-webkit-datetime-edit-month-field,
+            input[type="datetime-local"]::-webkit-datetime-edit-day-field,
+            input[type="datetime-local"]::-webkit-datetime-edit-year-field,
+            input[type="datetime-local"]::-webkit-datetime-edit-hour-field,
+            input[type="datetime-local"]::-webkit-datetime-edit-minute-field {
+                color: #fff;
+            }
         }
 
         input[type="text"]:focus,
