@@ -91,13 +91,17 @@
             appearance: none !important;
         }
 
-        /* ライトモードを明示的に指定 */
-        @media (prefers-color-scheme: light) {
+        /* ライトモードを明示的に指定（デフォルトとno-preference） */
+        @media (prefers-color-scheme: light), (prefers-color-scheme: no-preference) {
             input[type="datetime-local"] {
                 background-color: #ffffff !important;
                 background: #ffffff !important;
                 color: #000000 !important;
                 -webkit-text-fill-color: #000000 !important;
+            }
+
+            input[type="datetime-local"]::-webkit-calendar-picker-indicator {
+                background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>') !important;
             }
 
             input[type="datetime-local"]::-webkit-datetime-edit,
