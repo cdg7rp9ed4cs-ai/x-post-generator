@@ -283,7 +283,7 @@
             height: auto;
             display: block;
             max-height: 510px;
-            object-fit: cover;
+            object-fit: contain;
         }
 
         .post-image-label {
@@ -771,8 +771,10 @@
             previewPostTime.textContent = getTimeAgo(postDateTimeInput.value);
             const count = parseInt(viewCountInput.value) || 0;
             const formatted = formatNumber(count);
-            const metaElement = document.getElementById('previewPostMeta');
-            metaElement.parentElement.innerHTML = `<span id="previewPostMeta">${formatDateTime(postDateTimeInput.value)}</span> · <span style="font-weight: bold; color: #e7e9ea;" id="previewViewCount">${formatted}</span> 件の表示`;
+            const previewPostMeta = document.getElementById('previewPostMeta');
+            const previewViewCount = document.getElementById('previewViewCount');
+            previewPostMeta.textContent = formatDateTime(postDateTimeInput.value);
+            previewViewCount.textContent = formatted;
         }
 
         // 初期表示を更新
