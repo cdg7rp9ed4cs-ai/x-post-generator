@@ -59,7 +59,8 @@
         }
 
         input[type="text"],
-        input[type="number"] {
+        input[type="number"],
+        input[type="datetime-local"] {
             width: 100%;
             background-color: #000;
             border: 1px solid #2f3336;
@@ -72,7 +73,8 @@
         }
 
         input[type="text"]:focus,
-        input[type="number"]:focus {
+        input[type="number"]:focus,
+        input[type="datetime-local"]:focus {
             border-color: #1d9bf0;
         }
 
@@ -276,6 +278,11 @@
             border-radius: 16px;
             overflow: hidden;
             border: 1px solid #2f3336;
+            max-height: 510px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #000;
         }
 
         .post-image {
@@ -763,18 +770,29 @@
             previewUsername.textContent = '@' + (username || 'username');
         });
 
+        postDateTimeInput.addEventListener('change', function() {
+            updateDateTime();
+        });
+
         postDateTimeInput.addEventListener('input', function() {
             updateDateTime();
         });
 
         function updateDateTime() {
-            previewPostTime.textContent = getTimeAgo(postDateTimeInput.value);
+            const dateValue = postDateTimeInput.value;
+            if (dateValue) {
+                previewPostTime.textContent = getTimeAgo(dateValue);
+                const previewPostMeta = document.getElementById('previewPostMeta');
+                if (previewPostMeta) {
+                    previewPostMeta.textContent = formatDateTime(dateValue);
+                }
+            }
             const count = parseInt(viewCountInput.value) || 0;
             const formatted = formatNumber(count);
-            const previewPostMeta = document.getElementById('previewPostMeta');
             const previewViewCount = document.getElementById('previewViewCount');
-            previewPostMeta.textContent = formatDateTime(postDateTimeInput.value);
-            previewViewCount.textContent = formatted;
+            if (previewViewCount) {
+                previewViewCount.textContent = formatted;
+            }
         }
 
         // 初期表示を更新
@@ -787,6 +805,9 @@
                 reader.onload = function(event) {
                     avatarPreview.innerHTML = `<img src="${event.target.result}" alt="Avatar">`;
                 };
+                reader.onerror = function() {
+                    alert('アイコン画像の読み込みに失敗しました');
+                };
                 reader.readAsDataURL(file);
             }
         });
@@ -794,14 +815,45 @@
         postImageInput.addEventListener('change', function(e) {
             const file = e.target.files[0];
             if (file) {
+                // ファイルサイズチェック (10MB以下)
+                if (file.size > 10 * 1024 * 1024) {
+                    alert('画像ファイルが大きすぎます。10MB以下の画像を選択してください。');
+                    this.value = '';
+                    return;
+                }
+
                 const reader = new FileReader();
                 reader.onload = function(event) {
-                    postImageContainer.innerHTML = `
-                        <div class="post-image-container">
-                            <img src="${event.target.result}" class="post-image" alt="Post image">
-                        </div>
-                    `;
-                    postImageContainer.style.display = 'block';
+                    const img = new Image();
+                    img.onload = function() {
+                        // 画像のリサイズ処理（縦長画像対応）
+                        let targetWidth = img.width;
+                        let targetHeight = img.height;
+                        const maxHeight = 510;
+                        
+                        // 高さが最大値を超える場合は縮小
+                        if (targetHeight > maxHeight) {
+                            const ratio = maxHeight / targetHeight;
+                            targetHeight = maxHeight;
+                            targetWidth = img.width * ratio;
+                        }
+
+                        postImageContainer.innerHTML = `
+                            <div class="post-image-container">
+                                <img src="${event.target.result}" class="post-image" alt="Post image" style="max-height: ${maxHeight}px;">
+                            </div>
+                        `;
+                        postImageContainer.style.display = 'block';
+                    };
+                    img.onerror = function() {
+                        alert('画像の読み込みに失敗しました。別の画像を選択してください。');
+                        postImageInput.value = '';
+                    };
+                    img.src = event.target.result;
+                };
+                reader.onerror = function() {
+                    alert('ファイルの読み込みに失敗しました');
+                    postImageInput.value = '';
                 };
                 reader.readAsDataURL(file);
             } else {
@@ -852,15 +904,18 @@
                 const bgColor = document.body.classList.contains('light-mode') ? '#ffffff' : '#000';
                 const canvas = await html2canvas(postPreview, {
                     backgroundColor: bgColor,
-                    scale: 2
+                    scale: 2,
+                    logging: false,
+                    useCORS: true,
+                    allowTaint: true
                 });
 
                 const link = document.createElement('a');
                 link.download = 'x-post.png';
-                link.href = canvas.toDataURL();
+                link.href = canvas.toDataURL('image/png');
                 link.click();
             } catch (error) {
-                alert('画像の生成に失敗しました');
+                alert('画像の生成に失敗しました: ' + error.message);
                 console.error(error);
             }
         });
