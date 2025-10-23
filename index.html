@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>X風投稿ジェネレーター</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.1/cropper.min.css">
     <style>
         * {
             margin: 0;
@@ -403,6 +404,79 @@
             background-color: rgba(29, 155, 240, 0.1);
         }
 
+        /* Crop modal styles */
+        .crop-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.9);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .crop-modal.active {
+            display: flex;
+        }
+
+        .crop-container {
+            max-width: 90%;
+            max-height: 90%;
+            background-color: #16181c;
+            border-radius: 16px;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .crop-image-container {
+            max-height: 60vh;
+            overflow: hidden;
+        }
+
+        .crop-image-container img {
+            max-width: 100%;
+        }
+
+        .crop-buttons {
+            display: flex;
+            gap: 12px;
+            justify-content: flex-end;
+        }
+
+        .crop-btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 9999px;
+            font-size: 15px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .crop-btn-cancel {
+            background-color: transparent;
+            border: 1px solid #2f3336;
+            color: #e7e9ea;
+        }
+
+        .crop-btn-cancel:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .crop-btn-apply {
+            background-color: #1d9bf0;
+            color: white;
+        }
+
+        .crop-btn-apply:hover {
+            background-color: #1a8cd8;
+        }
+
         /* Light mode styles */
         body.light-mode {
             background-color: #f7f9f9;
@@ -500,6 +574,15 @@
 
         body.light-mode .post-image-container {
             border-color: #cfd9de;
+        }
+
+        body.light-mode .crop-container {
+            background-color: #ffffff;
+        }
+
+        body.light-mode .crop-btn-cancel {
+            border-color: #cfd9de;
+            color: #0f1419;
         }
     </style>
 </head>
@@ -636,6 +719,20 @@
         </div>
     </div>
 
+    <!-- Crop Modal -->
+    <div class="crop-modal" id="cropModal">
+        <div class="crop-container">
+            <div class="crop-image-container">
+                <img id="cropImage" src="">
+            </div>
+            <div class="crop-buttons">
+                <button class="crop-btn crop-btn-cancel" id="cropCancel">キャンセル</button>
+                <button class="crop-btn crop-btn-apply" id="cropApply">適用</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.1/cropper.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <script>
         const postInput = document.getElementById('postInput');
@@ -664,6 +761,14 @@
         const showMetaToggle = document.getElementById('showMetaToggle');
         const postMeta = document.querySelector('.post-meta');
 
+        const cropModal = document.getElementById('cropModal');
+        const cropImage = document.getElementById('cropImage');
+        const cropCancel = document.getElementById('cropCancel');
+        const cropApply = document.getElementById('cropApply');
+
+        let cropper = null;
+        let currentCropType = null; // 'avatar' or 'post'
+
         function formatNumber(num) {
             if (num >= 10000) {
                 return (num / 10000).toFixed(1) + '万';
@@ -683,6 +788,81 @@
 
             return `${hours}:${minutes} ${year}/${month}/${day}`;
         }
+
+        function openCropModal(imageSrc, type) {
+            currentCropType = type;
+            cropImage.src = imageSrc;
+            cropModal.classList.add('active');
+            
+            // Initialize cropper
+            if (cropper) {
+                cropper.destroy();
+            }
+
+            const aspectRatio = type === 'avatar' ? 1 : NaN; // 1:1 for avatar, free for post
+            
+            cropper = new Cropper(cropImage, {
+                aspectRatio: aspectRatio,
+                viewMode: 1,
+                autoCropArea: 1,
+                responsive: true,
+                background: false,
+                guides: true,
+                center: true,
+                highlight: true,
+                cropBoxMovable: true,
+                cropBoxResizable: true,
+                toggleDragModeOnDblclick: false,
+            });
+        }
+
+        function closeCropModal() {
+            cropModal.classList.remove('active');
+            if (cropper) {
+                cropper.destroy();
+                cropper = null;
+            }
+            currentCropType = null;
+        }
+
+        cropCancel.addEventListener('click', function() {
+            closeCropModal();
+            // Reset file inputs
+            if (currentCropType === 'avatar') {
+                avatarInput.value = '';
+            } else {
+                postImageInput.value = '';
+            }
+        });
+
+        cropApply.addEventListener('click', function() {
+            if (!cropper) return;
+
+            const canvas = cropper.getCroppedCanvas({
+                maxWidth: currentCropType === 'avatar' ? 400 : 2000,
+                maxHeight: currentCropType === 'avatar' ? 400 : 2000,
+                fillColor: '#fff',
+                imageSmoothingEnabled: true,
+                imageSmoothingQuality: 'high',
+            });
+
+            canvas.toBlob(function(blob) {
+                const url = URL.createObjectURL(blob);
+                
+                if (currentCropType === 'avatar') {
+                    avatarPreview.innerHTML = `<img src="${url}" alt="Avatar">`;
+                } else {
+                    postImageContainer.innerHTML = `
+                        <div class="post-image-container">
+                            <img src="${url}" class="post-image" alt="Post image">
+                        </div>
+                    `;
+                    postImageContainer.style.display = 'block';
+                }
+                
+                closeCropModal();
+            }, 'image/jpeg', 0.95);
+        });
 
         // デフォルト値を設定
         const now = new Date();
@@ -751,9 +931,15 @@
         avatarInput.addEventListener('change', function(e) {
             const file = e.target.files[0];
             if (file) {
+                if (file.size > 10 * 1024 * 1024) {
+                    alert('画像ファイルが大きすぎます。10MB以下の画像を選択してください。');
+                    this.value = '';
+                    return;
+                }
+
                 const reader = new FileReader();
                 reader.onload = function(event) {
-                    avatarPreview.innerHTML = `<img src="${event.target.result}" alt="Avatar">`;
+                    openCropModal(event.target.result, 'avatar');
                 };
                 reader.onerror = function() {
                     alert('アイコン画像の読み込みに失敗しました');
@@ -765,7 +951,6 @@
         postImageInput.addEventListener('change', function(e) {
             const file = e.target.files[0];
             if (file) {
-                // ファイルサイズチェック (10MB以下)
                 if (file.size > 10 * 1024 * 1024) {
                     alert('画像ファイルが大きすぎます。10MB以下の画像を選択してください。');
                     this.value = '';
@@ -774,35 +959,10 @@
 
                 const reader = new FileReader();
                 reader.onload = function(event) {
-                    const img = new Image();
-                    img.onload = function() {
-                        // 画像のリサイズ処理（縦長画像対応）
-                        let targetWidth = img.width;
-                        let targetHeight = img.height;
-                        const maxHeight = 510;
-                        
-                        // 高さが最大値を超える場合は縮小
-                        if (targetHeight > maxHeight) {
-                            const ratio = maxHeight / targetHeight;
-                            targetHeight = maxHeight;
-                            targetWidth = img.width * ratio;
-                        }
-
-                        postImageContainer.innerHTML = `
-                            <div class="post-image-container">
-                                <img src="${event.target.result}" class="post-image" alt="Post image" style="max-height: ${maxHeight}px;">
-                            </div>
-                        `;
-                        postImageContainer.style.display = 'block';
-                    };
-                    img.onerror = function() {
-                        alert('画像の読み込みに失敗しました。別の画像を選択してください。');
-                        postImageInput.value = '';
-                    };
-                    img.src = event.target.result;
+                    openCropModal(event.target.result, 'post');
                 };
                 reader.onerror = function() {
-                    alert('ファイルの読み込みに失敗しました');
+                    alert('画像の読み込みに失敗しました');
                     postImageInput.value = '';
                 };
                 reader.readAsDataURL(file);
