@@ -206,23 +206,6 @@
             line-height: 20px;
         }
 
-        .post-time {
-            color: #71767b;
-            font-size: 15px;
-            font-weight: 400;
-            line-height: 20px;
-            margin-top: 4px;
-        }
-
-        .post-time.hidden {
-            display: none;
-        }
-
-        .post-time::before {
-            content: "";
-            margin: 0;
-        }
-
         .more-btn {
             margin-left: auto;
             color: #71767b;
@@ -498,7 +481,6 @@
         }
 
         body.light-mode .username,
-        body.light-mode .post-time,
         body.light-mode .post-meta,
         body.light-mode .action-item {
             color: #536471;
@@ -582,12 +564,6 @@
                     <span>表示と日付を表示</span>
                 </label>
             </div>
-            <div class="toggle-group">
-                <label class="toggle-label">
-                    <input type="checkbox" id="showTimeToggle" checked>
-                    <span>投稿時間を表示</span>
-                </label>
-            </div>
             <textarea
                 id="postInput"
                 placeholder="いまどうしてる？"
@@ -608,7 +584,6 @@
                         <span class="display-name" id="previewDisplayName">ユーザー名</span>
                         <span class="username" id="previewUsername">@username</span>
                     </div>
-                    <span class="post-time" id="previewPostTime">1時間</span>
                 </div>
                 <div class="more-btn">
                     <svg viewBox="0 0 24 24" width="18.75" height="18.75" fill="currentColor"><path d="M3 12c0-1.1.9-2 2-2s2 .9 2 2-.9 2-2 2-2-.9-2-2zm9 2c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm7 0c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2z"/></svg>
@@ -617,7 +592,7 @@
             <div class="post-content" id="previewContent"></div>
             <div id="postImageContainer" style="display: none;"></div>
             <div class="post-meta">
-                <span id="previewPostMeta">午後11:30 · 2025年10月22日</span> · <span style="font-weight: bold; color: #e7e9ea;" id="previewViewCount">123.4万</span> 件の表示
+                <span id="previewPostMeta">23:30 2025/10/22</span> · <span style="font-weight: bold; color: #e7e9ea;" id="previewViewCount">123.4万</span> 件の表示
             </div>
             <div class="post-actions">
                 <div class="action-item">
@@ -675,7 +650,6 @@
         const postImageInput = document.getElementById('postImageInput');
         const previewDisplayName = document.getElementById('previewDisplayName');
         const previewUsername = document.getElementById('previewUsername');
-        const previewPostTime = document.getElementById('previewPostTime');
         const avatarPreview = document.getElementById('avatarPreview');
         const postImageContainer = document.getElementById('postImageContainer');
         const replyCountInput = document.getElementById('replyCount');
@@ -688,9 +662,7 @@
         const actionLikeCount = document.getElementById('actionLikeCount');
         const actionViewCount = document.getElementById('actionViewCount');
         const showMetaToggle = document.getElementById('showMetaToggle');
-        const showTimeToggle = document.getElementById('showTimeToggle');
         const postMeta = document.querySelector('.post-meta');
-        const postTime = document.getElementById('previewPostTime');
 
         function formatNumber(num) {
             if (num >= 10000) {
@@ -699,38 +671,17 @@
             return num.toLocaleString();
         }
 
-        function getTimeAgo(dateTime) {
-            if (!dateTime) return '1時間';
-
-            const postDate = new Date(dateTime);
-            const now = new Date();
-            const diffMs = now - postDate;
-            const diffMins = Math.floor(diffMs / 60000);
-            const diffHours = Math.floor(diffMs / 3600000);
-            const diffDays = Math.floor(diffMs / 86400000);
-
-            if (diffMins < 1) return '今';
-            if (diffMins < 60) return `${diffMins}分`;
-            if (diffHours < 24) return `${diffHours}時間`;
-            if (diffDays < 7) return `${diffDays}日`;
-
-            return postDate.toLocaleDateString('ja-JP', { month: '1月', day: '日' }).replace('月', '月').replace('日', '日');
-        }
-
         function formatDateTime(dateTime) {
-            if (!dateTime) return '午後11:30 · 2025年10月22日';
+            if (!dateTime) return '23:30 2025/10/22';
 
             const date = new Date(dateTime);
-            const hours = date.getHours();
+            const hours = date.getHours().toString().padStart(2, '0');
             const minutes = date.getMinutes().toString().padStart(2, '0');
-            const ampm = hours >= 12 ? '午後' : '午前';
-            const displayHours = hours % 12 || 12;
-
             const year = date.getFullYear();
-            const month = date.getMonth() + 1;
-            const day = date.getDate();
+            const month = (date.getMonth() + 1).toString().padStart(2, '0');
+            const day = date.getDate().toString().padStart(2, '0');
 
-            return `${ampm}${displayHours}:${minutes} · ${year}年${month}月${day}日`;
+            return `${hours}:${minutes} ${year}/${month}/${day}`;
         }
 
         // デフォルト値を設定
@@ -781,7 +732,6 @@
         function updateDateTime() {
             const dateValue = postDateTimeInput.value;
             if (dateValue) {
-                previewPostTime.textContent = getTimeAgo(dateValue);
                 const previewPostMeta = document.getElementById('previewPostMeta');
                 if (previewPostMeta) {
                     previewPostMeta.textContent = formatDateTime(dateValue);
@@ -888,14 +838,6 @@
                 postMeta.classList.remove('hidden');
             } else {
                 postMeta.classList.add('hidden');
-            }
-        });
-
-        showTimeToggle.addEventListener('change', function() {
-            if (this.checked) {
-                postTime.classList.remove('hidden');
-            } else {
-                postTime.classList.add('hidden');
             }
         });
 
