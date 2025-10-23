@@ -1,0 +1,849 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>X風投稿ジェネレーター</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: #15202b;
+            color: #e7e9ea;
+            min-height: 100vh;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+        }
+
+        .container {
+            max-width: 430px;
+            width: 100%;
+            background-color: #000;
+            min-height: 100vh;
+            box-shadow: 0 0 15px rgba(255, 255, 255, 0.1);
+        }
+
+        .screen-container {
+            padding: 12px;
+        }
+
+        .input-area {
+            background-color: #16181c;
+            border-radius: 0;
+            border-bottom: 1px solid #2f3336;
+            padding: 16px;
+            margin-bottom: 12px;
+        }
+
+        .user-inputs {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 12px;
+        }
+
+        .input-group {
+            flex: 1;
+        }
+
+        .input-label {
+            font-size: 13px;
+            color: #71767b;
+            margin-bottom: 4px;
+        }
+
+        input[type="text"],
+        input[type="number"] {
+            width: 100%;
+            background-color: #000;
+            border: 1px solid #2f3336;
+            border-radius: 4px;
+            padding: 8px 12px;
+            color: #e7e9ea;
+            font-size: 15px;
+            font-family: inherit;
+            outline: none;
+        }
+
+        input[type="text"]:focus,
+        input[type="number"]:focus {
+            border-color: #1d9bf0;
+        }
+
+        .stats-inputs {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-bottom: 12px;
+        }
+
+        textarea {
+            width: 100%;
+            min-height: 100px;
+            background-color: transparent;
+            border: none;
+            color: #e7e9ea;
+            font-size: 17px;
+            font-family: inherit;
+            resize: vertical;
+            outline: none;
+        }
+
+        textarea::placeholder {
+            color: #71767b;
+        }
+
+        .char-count {
+            text-align: right;
+            color: #71767b;
+            font-size: 14px;
+            margin-top: 10px;
+        }
+
+        .char-count.warning {
+            color: #ffd400;
+        }
+
+        .char-count.error {
+            color: #f4212e;
+        }
+
+        .post-preview {
+            background-color: #000;
+            border-radius: 0;
+            border-bottom: 1px solid #2f3336;
+            padding: 16px;
+            display: none;
+        }
+
+        .post-preview.visible {
+            display: block;
+        }
+
+        .post-header {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 2px;
+            padding: 0;
+        }
+
+        .avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #1d9bf0, #7856ff);
+            margin-right: 12px;
+            object-fit: cover;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            flex-shrink: 0;
+        }
+
+        .avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .avatar-placeholder {
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #1d9bf0, #7856ff);
+        }
+
+        .user-info {
+            display: flex;
+            flex-direction: column;
+            flex: 1;
+            min-width: 0;
+        }
+
+        .user-name-row {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            margin-bottom: 2px;
+        }
+
+        .display-name {
+            font-weight: 700;
+            font-size: 15px;
+            line-height: 20px;
+        }
+
+        .username {
+            color: #71767b;
+            font-size: 15px;
+            font-weight: 400;
+            line-height: 20px;
+        }
+
+        .post-time {
+            color: #71767b;
+            font-size: 15px;
+            font-weight: 400;
+            line-height: 20px;
+        }
+
+        .post-time::before {
+            content: "·";
+            margin: 0 2px;
+        }
+
+        .more-btn {
+            margin-left: auto;
+            color: #71767b;
+            cursor: pointer;
+            padding: 0 8px;
+        }
+
+        .file-input-wrapper {
+            position: relative;
+            display: inline-block;
+            width: 100%;
+        }
+
+        .file-input-label {
+            display: block;
+            padding: 8px 12px;
+            background-color: #000;
+            border: 1px solid #2f3336;
+            border-radius: 4px;
+            color: #e7e9ea;
+            cursor: pointer;
+            text-align: center;
+            font-size: 15px;
+        }
+
+        .file-input-label:hover {
+            border-color: #1d9bf0;
+        }
+
+        input[type="file"] {
+            display: none;
+        }
+
+        .avatar-preview {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-top: 8px;
+        }
+
+        .post-content {
+            font-size: 15px;
+            line-height: 20px;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            margin: 0 0 12px 0;
+            color: #e7e9ea;
+        }
+
+        .post-image-container {
+            margin: 12px 0;
+            border-radius: 16px;
+            overflow: hidden;
+            border: 1px solid #2f3336;
+        }
+
+        .post-image {
+            width: 100%;
+            height: auto;
+            display: block;
+            max-height: 510px;
+            object-fit: cover;
+        }
+
+        .post-image-label {
+            display: block;
+            padding: 12px;
+            background-color: #16181c;
+            border: 2px dashed #2f3336;
+            border-radius: 16px;
+            color: #1d9bf0;
+            cursor: pointer;
+            text-align: center;
+            font-size: 15px;
+            margin: 12px 0;
+        }
+
+        .post-image-label:hover {
+            background-color: #1c1f23;
+        }
+
+        input[type="file"]#postImageInput {
+            display: none;
+        }
+
+        .post-meta {
+            color: #71767b;
+            font-size: 15px;
+            padding: 0;
+            margin: 16px 0 4px 0;
+            line-height: 20px;
+        }
+
+        .post-stats {
+            display: flex;
+            gap: 20px;
+            padding: 12px 0;
+            border-top: 1px solid #2f3336;
+            border-bottom: 1px solid #2f3336;
+            margin: 12px 0;
+        }
+
+        .stat-item {
+            display: flex;
+            align-items: baseline;
+            gap: 4px;
+        }
+
+        .stat-value {
+            font-weight: 700;
+            font-size: 15px;
+            color: #e7e9ea;
+        }
+
+        .stat-label {
+            color: #71767b;
+            font-size: 15px;
+            font-weight: 400;
+        }
+
+        .post-actions {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            padding: 0;
+            margin: 0;
+            max-width: 425px;
+        }
+
+        .action-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: #71767b;
+            font-size: 13px;
+            cursor: pointer;
+            padding: 0;
+        }
+
+        .action-icon {
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .action-icon svg {
+            width: 18.75px;
+            height: 18.75px;
+        }
+
+        .action-count {
+            font-size: 13px;
+            font-weight: 400;
+            line-height: 16px;
+        }
+
+        .download-btn {
+            background-color: #1d9bf0;
+            color: white;
+            border: none;
+            border-radius: 9999px;
+            padding: 14px 24px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 12px;
+            transition: background-color 0.2s;
+        }
+
+        .download-btn:hover {
+            background-color: #1a8cd8;
+        }
+
+        .download-btn:disabled {
+            background-color: #2f3336;
+            color: #71767b;
+            cursor: not-allowed;
+        }
+
+        .theme-toggle {
+            display: flex;
+            justify-content: flex-end;
+            padding: 12px 16px;
+            border-bottom: 1px solid #2f3336;
+        }
+
+        .theme-toggle-btn {
+            background-color: transparent;
+            border: 1px solid #2f3336;
+            border-radius: 9999px;
+            padding: 8px 16px;
+            color: #1d9bf0;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.2s;
+        }
+
+        .theme-toggle-btn:hover {
+            background-color: rgba(29, 155, 240, 0.1);
+        }
+
+        /* Light mode styles */
+        body.light-mode {
+            background-color: #f7f9f9;
+            color: #0f1419;
+        }
+
+        body.light-mode .container {
+            background-color: #ffffff;
+        }
+
+        body.light-mode .input-area {
+            background-color: #ffffff;
+            border-bottom: 1px solid #eff3f4;
+        }
+
+        body.light-mode .post-preview {
+            background-color: #ffffff;
+            border-bottom: 1px solid #eff3f4;
+        }
+
+        body.light-mode .theme-toggle {
+            border-bottom: 1px solid #eff3f4;
+        }
+
+        body.light-mode .theme-toggle-btn {
+            border-color: #cfd9de;
+            color: #1d9bf0;
+        }
+
+        body.light-mode input[type="text"],
+        body.light-mode input[type="number"],
+        body.light-mode input[type="datetime-local"] {
+            background-color: #ffffff;
+            border-color: #cfd9de;
+            color: #0f1419;
+        }
+
+        body.light-mode textarea {
+            color: #0f1419;
+        }
+
+        body.light-mode textarea::placeholder {
+            color: #536471;
+        }
+
+        body.light-mode .input-label {
+            color: #536471;
+        }
+
+        body.light-mode .char-count {
+            color: #536471;
+        }
+
+        body.light-mode .file-input-label {
+            background-color: #ffffff;
+            border-color: #cfd9de;
+            color: #0f1419;
+        }
+
+        body.light-mode .post-image-label {
+            background-color: #f7f9f9;
+            border-color: #cfd9de;
+        }
+
+        body.light-mode .post-image-label:hover {
+            background-color: #eff3f4;
+        }
+
+        body.light-mode .display-name,
+        body.light-mode .post-content,
+        body.light-mode .stat-value {
+            color: #0f1419;
+        }
+
+        body.light-mode .username,
+        body.light-mode .post-time,
+        body.light-mode .post-meta,
+        body.light-mode .stat-label,
+        body.light-mode .action-item {
+            color: #536471;
+        }
+
+        body.light-mode .more-btn {
+            color: #536471;
+        }
+
+        body.light-mode .post-stats {
+            border-top: 1px solid #eff3f4;
+            border-bottom: 1px solid #eff3f4;
+        }
+
+        body.light-mode .post-image-container {
+            border-color: #cfd9de;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="screen-container">
+        <div class="theme-toggle">
+            <button class="theme-toggle-btn" id="themeToggle">
+                <span id="themeIcon">☀️</span>
+                <span id="themeText">ライトモード</span>
+            </button>
+        </div>
+        <div class="input-area">
+            <div class="user-inputs">
+                <div class="input-group">
+                    <div class="input-label">アイコン画像</div>
+                    <div class="file-input-wrapper">
+                        <input type="file" id="avatarInput" accept="image/*">
+                        <label for="avatarInput" class="file-input-label">画像を選択</label>
+                    </div>
+                </div>
+                <div class="input-group">
+                    <div class="input-label">表示名</div>
+                    <input type="text" id="displayName" placeholder="ユーザー名" value="ユーザー名">
+                </div>
+            </div>
+            <div class="user-inputs">
+                <div class="input-group">
+                    <div class="input-label">@ユーザーID</div>
+                    <input type="text" id="username" placeholder="username" value="username">
+                </div>
+                <div class="input-group">
+                    <div class="input-label">投稿日時</div>
+                    <input type="datetime-local" id="postDateTime" value="">
+                </div>
+            </div>
+            <div class="stats-inputs">
+                <div class="input-group">
+                    <div class="input-label">リポスト</div>
+                    <input type="number" id="repostCount" placeholder="567" value="567" min="0">
+                </div>
+                <div class="input-group">
+                    <div class="input-label">いいね</div>
+                    <input type="number" id="likeCount" placeholder="8901" value="8901" min="0">
+                </div>
+                <div class="input-group">
+                    <div class="input-label">ブックマーク</div>
+                    <input type="number" id="bookmarkCount" placeholder="89" value="89" min="0">
+                </div>
+                <div class="input-group">
+                    <div class="input-label">表示回数</div>
+                    <input type="number" id="viewCount" placeholder="1234000" value="1234000" min="0">
+                </div>
+            </div>
+            <textarea
+                id="postInput"
+                placeholder="いまどうしてる？"
+                maxlength="280"
+            ></textarea>
+            <input type="file" id="postImageInput" accept="image/*">
+            <label for="postImageInput" class="post-image-label">📷 画像を追加</label>
+            <div class="char-count" id="charCount">0 / 280</div>
+        </div>
+
+        <div class="post-preview" id="postPreview">
+            <div class="post-header">
+                <div class="avatar" id="avatarPreview">
+                    <div class="avatar-placeholder"></div>
+                </div>
+                <div class="user-info">
+                    <div class="user-name-row">
+                        <span class="display-name" id="previewDisplayName">ユーザー名</span>
+                        <span class="username" id="previewUsername">@username</span>
+                        <span class="post-time" id="previewPostTime">1時間</span>
+                    </div>
+                </div>
+                <div class="more-btn">
+                    <svg viewBox="0 0 24 24" width="18.75" height="18.75" fill="currentColor"><path d="M3 12c0-1.1.9-2 2-2s2 .9 2 2-.9 2-2 2-2-.9-2-2zm9 2c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm7 0c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2z"/></svg>
+                </div>
+            </div>
+            <div class="post-content" id="previewContent"></div>
+            <div id="postImageContainer" style="display: none;"></div>
+            <div class="post-meta">
+                <span id="previewPostMeta">午後11:30 · 2025年10月22日</span> · <span style="font-weight: bold; color: #e7e9ea;" id="previewViewCount">123.4万</span> 件の表示
+            </div>
+            <div class="post-stats">
+                <div class="stat-item">
+                    <span class="stat-value" id="previewRepostCount">567</span>
+                    <span class="stat-label">リポスト</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-value" id="previewLikeCount">8,901</span>
+                    <span class="stat-label">いいね</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-value" id="previewBookmarkCount">89</span>
+                    <span class="stat-label">ブックマーク</span>
+                </div>
+            </div>
+            <div class="post-actions">
+                <div class="action-item">
+                    <div class="action-icon">
+                        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M1.751 10c0-4.42 3.584-8 8.005-8h4.366c4.49 0 8.129 3.64 8.129 8.13 0 2.96-1.607 5.68-4.196 7.11l-8.054 4.46v-3.69h-.067c-4.49.1-8.183-3.51-8.183-8.01zm8.005-6c-3.317 0-6.005 2.69-6.005 6 0 3.37 2.77 6.08 6.138 6.01l.351-.01h1.761v2.3l5.087-2.81c1.951-1.08 3.163-3.13 3.163-5.36 0-3.39-2.744-6.13-6.129-6.13H9.756z"/></svg>
+                    </div>
+                </div>
+                <div class="action-item">
+                    <div class="action-icon">
+                        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M4.5 3.88l4.432 4.14-1.364 1.46L5.5 7.55V16c0 1.1.896 2 2 2H13v2H7.5c-2.209 0-4-1.79-4-4V7.55L1.432 9.48.068 8.02 4.5 3.88zM16.5 6H11V4h5.5c2.209 0 4 1.79 4 4v8.45l2.068-1.93 1.364 1.46-4.432 4.14-4.432-4.14 1.364-1.46 2.068 1.93V8c0-1.1-.896-2-2-2z"/></svg>
+                    </div>
+                </div>
+                <div class="action-item">
+                    <div class="action-icon">
+                        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M16.697 5.5c-1.222-.06-2.679.51-3.89 2.16l-.805 1.09-.806-1.09C9.984 6.01 8.526 5.44 7.304 5.5c-1.243.07-2.349.78-2.91 1.91-.552 1.12-.633 2.78.479 4.82 1.074 1.97 3.257 4.27 7.129 6.61 3.87-2.34 6.052-4.64 7.126-6.61 1.111-2.04 1.03-3.7.477-4.82-.561-1.13-1.666-1.84-2.908-1.91zm4.187 7.69c-1.351 2.48-4.001 5.12-8.379 7.67l-.503.3-.504-.3c-4.379-2.55-7.029-5.19-8.382-7.67-1.36-2.5-1.41-4.86-.514-6.67.887-1.79 2.647-2.91 4.601-3.01 1.651-.09 3.368.56 4.798 2.01 1.429-1.45 3.146-2.1 4.796-2.01 1.954.1 3.714 1.22 4.601 3.01.896 1.81.846 4.17-.514 6.67z"/></svg>
+                    </div>
+                </div>
+                <div class="action-item">
+                    <div class="action-icon">
+                        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M4 4.5C4 3.12 5.119 2 6.5 2h11C18.881 2 20 3.12 20 4.5v18.44l-8-5.71-8 5.71V4.5zM6.5 4c-.276 0-.5.22-.5.5v14.56l6-4.29 6 4.29V4.5c0-.28-.224-.5-.5-.5h-11z"/></svg>
+                    </div>
+                </div>
+                <div class="action-item">
+                    <div class="action-icon">
+                        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.59l5.7 5.7-1.41 1.42L13 6.41V16h-2V6.41l-3.3 3.3-1.41-1.42L12 2.59zM21 15l-.02 3.51c0 1.38-1.12 2.49-2.5 2.49H5.5C4.11 21 3 19.88 3 18.5V15h2v3.5c0 .28.22.5.5.5h12.98c.28 0 .5-.22.5-.5L19 15h2z"/></svg>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <button class="download-btn" id="downloadBtn" disabled>画像として保存</button>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script>
+        const postInput = document.getElementById('postInput');
+        const charCount = document.getElementById('charCount');
+        const postPreview = document.getElementById('postPreview');
+        const previewContent = document.getElementById('previewContent');
+        const downloadBtn = document.getElementById('downloadBtn');
+        const displayNameInput = document.getElementById('displayName');
+        const usernameInput = document.getElementById('username');
+        const postDateTimeInput = document.getElementById('postDateTime');
+        const avatarInput = document.getElementById('avatarInput');
+        const postImageInput = document.getElementById('postImageInput');
+        const previewDisplayName = document.getElementById('previewDisplayName');
+        const previewUsername = document.getElementById('previewUsername');
+        const previewPostTime = document.getElementById('previewPostTime');
+        const avatarPreview = document.getElementById('avatarPreview');
+        const postImageContainer = document.getElementById('postImageContainer');
+        const repostCountInput = document.getElementById('repostCount');
+        const likeCountInput = document.getElementById('likeCount');
+        const bookmarkCountInput = document.getElementById('bookmarkCount');
+        const viewCountInput = document.getElementById('viewCount');
+        const previewRepostCount = document.getElementById('previewRepostCount');
+        const previewLikeCount = document.getElementById('previewLikeCount');
+        const previewBookmarkCount = document.getElementById('previewBookmarkCount');
+        const previewViewCount = document.getElementById('previewViewCount');
+
+        function formatNumber(num) {
+            if (num >= 10000) {
+                return (num / 10000).toFixed(1) + '万';
+            }
+            return num.toLocaleString();
+        }
+
+        function getTimeAgo(dateTime) {
+            if (!dateTime) return '1時間';
+
+            const postDate = new Date(dateTime);
+            const now = new Date();
+            const diffMs = now - postDate;
+            const diffMins = Math.floor(diffMs / 60000);
+            const diffHours = Math.floor(diffMs / 3600000);
+            const diffDays = Math.floor(diffMs / 86400000);
+
+            if (diffMins < 1) return '今';
+            if (diffMins < 60) return `${diffMins}分`;
+            if (diffHours < 24) return `${diffHours}時間`;
+            if (diffDays < 7) return `${diffDays}日`;
+
+            return postDate.toLocaleDateString('ja-JP', { month: '1月', day: '日' }).replace('月', '月').replace('日', '日');
+        }
+
+        function formatDateTime(dateTime) {
+            if (!dateTime) return '午後11:30 · 2025年10月22日';
+
+            const date = new Date(dateTime);
+            const hours = date.getHours();
+            const minutes = date.getMinutes().toString().padStart(2, '0');
+            const ampm = hours >= 12 ? '午後' : '午前';
+            const displayHours = hours % 12 || 12;
+
+            const year = date.getFullYear();
+            const month = date.getMonth() + 1;
+            const day = date.getDate();
+
+            return `${ampm}${displayHours}:${minutes} · ${year}年${month}月${day}日`;
+        }
+
+        // デフォルト値を設定
+        const now = new Date();
+        now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
+        postDateTimeInput.value = now.toISOString().slice(0, 16);
+
+        postInput.addEventListener('input', function() {
+            const length = this.value.length;
+            charCount.textContent = `${length} / 280`;
+
+            // 文字数に応じて色を変更
+            charCount.classList.remove('warning', 'error');
+            if (length > 260) {
+                charCount.classList.add('error');
+            } else if (length > 240) {
+                charCount.classList.add('warning');
+            }
+
+            // プレビュー表示
+            if (length > 0) {
+                previewContent.textContent = this.value;
+                postPreview.classList.add('visible');
+                downloadBtn.disabled = false;
+            } else {
+                postPreview.classList.remove('visible');
+                downloadBtn.disabled = true;
+            }
+        });
+
+        displayNameInput.addEventListener('input', function() {
+            previewDisplayName.textContent = this.value || 'ユーザー名';
+        });
+
+        usernameInput.addEventListener('input', function() {
+            const username = this.value.replace(/^@/, '');
+            previewUsername.textContent = '@' + (username || 'username');
+        });
+
+        postDateTimeInput.addEventListener('input', function() {
+            updateDateTime();
+        });
+
+        function updateDateTime() {
+            previewPostTime.textContent = getTimeAgo(postDateTimeInput.value);
+            const count = parseInt(viewCountInput.value) || 0;
+            const formatted = formatNumber(count);
+            const metaElement = document.getElementById('previewPostMeta');
+            metaElement.parentElement.innerHTML = `<span id="previewPostMeta">${formatDateTime(postDateTimeInput.value)}</span> · <span style="font-weight: bold; color: #e7e9ea;" id="previewViewCount">${formatted}</span> 件の表示`;
+        }
+
+        // 初期表示を更新
+        updateDateTime();
+
+        avatarInput.addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(event) {
+                    avatarPreview.innerHTML = `<img src="${event.target.result}" alt="Avatar">`;
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+
+        postImageInput.addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(event) {
+                    postImageContainer.innerHTML = `
+                        <div class="post-image-container">
+                            <img src="${event.target.result}" class="post-image" alt="Post image">
+                        </div>
+                    `;
+                    postImageContainer.style.display = 'block';
+                };
+                reader.readAsDataURL(file);
+            } else {
+                postImageContainer.innerHTML = '';
+                postImageContainer.style.display = 'none';
+            }
+        });
+
+        repostCountInput.addEventListener('input', function() {
+            const count = parseInt(this.value) || 0;
+            previewRepostCount.textContent = formatNumber(count);
+        });
+
+        likeCountInput.addEventListener('input', function() {
+            const count = parseInt(this.value) || 0;
+            previewLikeCount.textContent = formatNumber(count);
+        });
+
+        bookmarkCountInput.addEventListener('input', function() {
+            const count = parseInt(this.value) || 0;
+            previewBookmarkCount.textContent = formatNumber(count);
+        });
+
+        viewCountInput.addEventListener('input', function() {
+            updateDateTime();
+        });
+
+        downloadBtn.addEventListener('click', async function() {
+            try {
+                const bgColor = document.body.classList.contains('light-mode') ? '#ffffff' : '#000';
+                const canvas = await html2canvas(postPreview, {
+                    backgroundColor: bgColor,
+                    scale: 2
+                });
+
+                const link = document.createElement('a');
+                link.download = 'x-post.png';
+                link.href = canvas.toDataURL();
+                link.click();
+            } catch (error) {
+                alert('画像の生成に失敗しました');
+                console.error(error);
+            }
+        });
+
+        // テーマ切り替え機能
+        const themeToggle = document.getElementById('themeToggle');
+        const themeIcon = document.getElementById('themeIcon');
+        const themeText = document.getElementById('themeText');
+
+        // ローカルストレージからテーマを読み込む
+        const savedTheme = localStorage.getItem('theme');
+        if (savedTheme === 'light') {
+            document.body.classList.add('light-mode');
+            themeIcon.textContent = '🌙';
+            themeText.textContent = 'ダークモード';
+        }
+
+        themeToggle.addEventListener('click', function() {
+            document.body.classList.toggle('light-mode');
+
+            if (document.body.classList.contains('light-mode')) {
+                themeIcon.textContent = '🌙';
+                themeText.textContent = 'ダークモード';
+                localStorage.setItem('theme', 'light');
+            } else {
+                themeIcon.textContent = '☀️';
+                themeText.textContent = 'ライトモード';
+                localStorage.setItem('theme', 'dark');
+            }
+        });
+    </script>
+</body>
+</html>
