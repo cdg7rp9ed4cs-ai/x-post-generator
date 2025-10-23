@@ -78,9 +78,28 @@
 
         .stats-inputs {
             display: grid;
-            grid-template-columns: 1fr 1fr;
+            grid-template-columns: 1fr 1fr 1fr;
             gap: 12px;
             margin-bottom: 12px;
+        }
+
+        .toggle-group {
+            margin-bottom: 12px;
+        }
+
+        .toggle-label {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            color: #e7e9ea;
+            font-size: 14px;
+        }
+
+        .toggle-label input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
         }
 
         textarea {
@@ -129,7 +148,7 @@
         .post-header {
             display: flex;
             align-items: flex-start;
-            margin-bottom: 2px;
+            margin-bottom: 12px;
             padding: 0;
         }
 
@@ -168,9 +187,8 @@
 
         .user-name-row {
             display: flex;
-            align-items: center;
-            gap: 4px;
-            margin-bottom: 2px;
+            flex-direction: column;
+            gap: 0;
         }
 
         .display-name {
@@ -191,11 +209,16 @@
             font-size: 15px;
             font-weight: 400;
             line-height: 20px;
+            margin-top: 4px;
+        }
+
+        .post-time.hidden {
+            display: none;
         }
 
         .post-time::before {
-            content: "·";
-            margin: 0 2px;
+            content: "";
+            margin: 0;
         }
 
         .more-btn {
@@ -244,7 +267,7 @@
             line-height: 20px;
             white-space: pre-wrap;
             word-wrap: break-word;
-            margin: 0 0 12px 0;
+            margin: 12px 0 12px 0;
             color: #e7e9ea;
         }
 
@@ -292,56 +315,33 @@
             line-height: 20px;
         }
 
-        .post-stats {
-            display: flex;
-            gap: 20px;
-            padding: 12px 0;
-            border-top: 1px solid #2f3336;
-            border-bottom: 1px solid #2f3336;
-            margin: 12px 0;
-        }
-
-        .stat-item {
-            display: flex;
-            align-items: center;
-            gap: 4px;
-        }
-
-        .stat-icon {
-            width: 18.75px;
-            height: 18.75px;
-            color: #71767b;
-        }
-
-        .stat-value {
-            font-weight: 400;
-            font-size: 15px;
-            color: #e7e9ea;
-        }
-
-        .stat-label {
-            color: #71767b;
-            font-size: 15px;
-            font-weight: 400;
+        .post-meta.hidden {
+            display: none;
         }
 
         .post-actions {
             display: flex;
-            justify-content: space-around;
+            justify-content: space-between;
             align-items: center;
-            padding: 0;
-            margin: 0;
+            padding: 12px 0;
+            margin: 12px 0 0 0;
             max-width: 425px;
+            border-top: 1px solid #2f3336;
         }
 
         .action-item {
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 4px;
             color: #71767b;
             font-size: 13px;
             cursor: pointer;
-            padding: 0;
+            padding: 8px 0;
+            transition: color 0.2s;
+        }
+
+        .action-item:hover {
+            color: #1d9bf0;
         }
 
         .action-icon {
@@ -466,6 +466,10 @@
             color: #536471;
         }
 
+        body.light-mode .toggle-label {
+            color: #0f1419;
+        }
+
         body.light-mode .file-input-label {
             background-color: #ffffff;
             border-color: #cfd9de;
@@ -482,30 +486,27 @@
         }
 
         body.light-mode .display-name,
-        body.light-mode .post-content,
-        body.light-mode .stat-value {
+        body.light-mode .post-content {
             color: #0f1419;
         }
 
         body.light-mode .username,
         body.light-mode .post-time,
         body.light-mode .post-meta,
-        body.light-mode .stat-label,
         body.light-mode .action-item {
             color: #536471;
+        }
+
+        body.light-mode #previewViewCount {
+            color: #0f1419 !important;
         }
 
         body.light-mode .more-btn {
             color: #536471;
         }
 
-        body.light-mode .post-stats {
+        body.light-mode .post-actions {
             border-top: 1px solid #eff3f4;
-            border-bottom: 1px solid #eff3f4;
-        }
-
-        body.light-mode .stat-icon {
-            color: #536471;
         }
 
         body.light-mode .post-image-container {
@@ -548,6 +549,10 @@
             </div>
             <div class="stats-inputs">
                 <div class="input-group">
+                    <div class="input-label">返信</div>
+                    <input type="number" id="replyCount" placeholder="12" value="12" min="0">
+                </div>
+                <div class="input-group">
                     <div class="input-label">リポスト</div>
                     <input type="number" id="repostCount" placeholder="567" value="567" min="0">
                 </div>
@@ -563,6 +568,18 @@
                     <div class="input-label">表示回数</div>
                     <input type="number" id="viewCount" placeholder="1234000" value="1234000" min="0">
                 </div>
+            </div>
+            <div class="toggle-group">
+                <label class="toggle-label">
+                    <input type="checkbox" id="showMetaToggle" checked>
+                    <span>表示と日付を表示</span>
+                </label>
+            </div>
+            <div class="toggle-group">
+                <label class="toggle-label">
+                    <input type="checkbox" id="showTimeToggle" checked>
+                    <span>投稿時間を表示</span>
+                </label>
             </div>
             <textarea
                 id="postInput"
@@ -583,8 +600,8 @@
                     <div class="user-name-row">
                         <span class="display-name" id="previewDisplayName">ユーザー名</span>
                         <span class="username" id="previewUsername">@username</span>
-                        <span class="post-time" id="previewPostTime">1時間</span>
                     </div>
+                    <span class="post-time" id="previewPostTime">1時間</span>
                 </div>
                 <div class="more-btn">
                     <svg viewBox="0 0 24 24" width="18.75" height="18.75" fill="currentColor"><path d="M3 12c0-1.1.9-2 2-2s2 .9 2 2-.9 2-2 2-2-.9-2-2zm9 2c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm7 0c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2z"/></svg>
@@ -595,35 +612,30 @@
             <div class="post-meta">
                 <span id="previewPostMeta">午後11:30 · 2025年10月22日</span> · <span style="font-weight: bold; color: #e7e9ea;" id="previewViewCount">123.4万</span> 件の表示
             </div>
-            <div class="post-stats">
-                <div class="stat-item">
-                    <svg class="stat-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M4.5 3.88l4.432 4.14-1.364 1.46L5.5 7.55V16c0 1.1.896 2 2 2H13v2H7.5c-2.209 0-4-1.79-4-4V7.55L1.432 9.48.068 8.02 4.5 3.88zM16.5 6H11V4h5.5c2.209 0 4 1.79 4 4v8.45l2.068-1.93 1.364 1.46-4.432 4.14-4.432-4.14 1.364-1.46 2.068 1.93V8c0-1.1-.896-2-2-2z"/></svg>
-                    <span class="stat-value" id="previewRepostCount">567</span>
-                </div>
-                <div class="stat-item">
-                    <svg class="stat-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M16.697 5.5c-1.222-.06-2.679.51-3.89 2.16l-.805 1.09-.806-1.09C9.984 6.01 8.526 5.44 7.304 5.5c-1.243.07-2.349.78-2.91 1.91-.552 1.12-.633 2.78.479 4.82 1.074 1.97 3.257 4.27 7.129 6.61 3.87-2.34 6.052-4.64 7.126-6.61 1.111-2.04 1.03-3.7.477-4.82-.561-1.13-1.666-1.84-2.908-1.91zm4.187 7.69c-1.351 2.48-4.001 5.12-8.379 7.67l-.503.3-.504-.3c-4.379-2.55-7.029-5.19-8.382-7.67-1.36-2.5-1.41-4.86-.514-6.67.887-1.79 2.647-2.91 4.601-3.01 1.651-.09 3.368.56 4.798 2.01 1.429-1.45 3.146-2.1 4.796-2.01 1.954.1 3.714 1.22 4.601 3.01.896 1.81.846 4.17-.514 6.67z"/></svg>
-                    <span class="stat-value" id="previewLikeCount">8,901</span>
-                </div>
-                <div class="stat-item">
-                    <svg class="stat-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M4 4.5C4 3.12 5.119 2 6.5 2h11C18.881 2 20 3.12 20 4.5v18.44l-8-5.71-8 5.71V4.5zM6.5 4c-.276 0-.5.22-.5.5v14.56l6-4.29 6 4.29V4.5c0-.28-.224-.5-.5-.5h-11z"/></svg>
-                    <span class="stat-value" id="previewBookmarkCount">89</span>
-                </div>
-            </div>
             <div class="post-actions">
                 <div class="action-item">
                     <div class="action-icon">
                         <svg viewBox="0 0 24 24" fill="currentColor"><path d="M1.751 10c0-4.42 3.584-8 8.005-8h4.366c4.49 0 8.129 3.64 8.129 8.13 0 2.96-1.607 5.68-4.196 7.11l-8.054 4.46v-3.69h-.067c-4.49.1-8.183-3.51-8.183-8.01zm8.005-6c-3.317 0-6.005 2.69-6.005 6 0 3.37 2.77 6.08 6.138 6.01l.351-.01h1.761v2.3l5.087-2.81c1.951-1.08 3.163-3.13 3.163-5.36 0-3.39-2.744-6.13-6.129-6.13H9.756z"/></svg>
                     </div>
+                    <span class="action-count" id="actionReplyCount">12</span>
                 </div>
                 <div class="action-item">
                     <div class="action-icon">
                         <svg viewBox="0 0 24 24" fill="currentColor"><path d="M4.5 3.88l4.432 4.14-1.364 1.46L5.5 7.55V16c0 1.1.896 2 2 2H13v2H7.5c-2.209 0-4-1.79-4-4V7.55L1.432 9.48.068 8.02 4.5 3.88zM16.5 6H11V4h5.5c2.209 0 4 1.79 4 4v8.45l2.068-1.93 1.364 1.46-4.432 4.14-4.432-4.14 1.364-1.46 2.068 1.93V8c0-1.1-.896-2-2-2z"/></svg>
                     </div>
+                    <span class="action-count" id="actionRepostCount">567</span>
                 </div>
                 <div class="action-item">
                     <div class="action-icon">
                         <svg viewBox="0 0 24 24" fill="currentColor"><path d="M16.697 5.5c-1.222-.06-2.679.51-3.89 2.16l-.805 1.09-.806-1.09C9.984 6.01 8.526 5.44 7.304 5.5c-1.243.07-2.349.78-2.91 1.91-.552 1.12-.633 2.78.479 4.82 1.074 1.97 3.257 4.27 7.129 6.61 3.87-2.34 6.052-4.64 7.126-6.61 1.111-2.04 1.03-3.7.477-4.82-.561-1.13-1.666-1.84-2.908-1.91zm4.187 7.69c-1.351 2.48-4.001 5.12-8.379 7.67l-.503.3-.504-.3c-4.379-2.55-7.029-5.19-8.382-7.67-1.36-2.5-1.41-4.86-.514-6.67.887-1.79 2.647-2.91 4.601-3.01 1.651-.09 3.368.56 4.798 2.01 1.429-1.45 3.146-2.1 4.796-2.01 1.954.1 3.714 1.22 4.601 3.01.896 1.81.846 4.17-.514 6.67z"/></svg>
                     </div>
+                    <span class="action-count" id="actionLikeCount">8,901</span>
+                </div>
+                <div class="action-item">
+                    <div class="action-icon">
+                        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M8.75 21V3h2v18h-2zM18 21V8.5h2V21h-2zM4 21l.004-10h2L6 21H4zm9.248 0v-7h2v7h-2z"/></svg>
+                    </div>
+                    <span class="action-count" id="actionViewCount">123.4万</span>
                 </div>
                 <div class="action-item">
                     <div class="action-icon">
@@ -659,14 +671,19 @@
         const previewPostTime = document.getElementById('previewPostTime');
         const avatarPreview = document.getElementById('avatarPreview');
         const postImageContainer = document.getElementById('postImageContainer');
+        const replyCountInput = document.getElementById('replyCount');
         const repostCountInput = document.getElementById('repostCount');
         const likeCountInput = document.getElementById('likeCount');
         const bookmarkCountInput = document.getElementById('bookmarkCount');
         const viewCountInput = document.getElementById('viewCount');
-        const previewRepostCount = document.getElementById('previewRepostCount');
-        const previewLikeCount = document.getElementById('previewLikeCount');
-        const previewBookmarkCount = document.getElementById('previewBookmarkCount');
-        const previewViewCount = document.getElementById('previewViewCount');
+        const actionReplyCount = document.getElementById('actionReplyCount');
+        const actionRepostCount = document.getElementById('actionRepostCount');
+        const actionLikeCount = document.getElementById('actionLikeCount');
+        const actionViewCount = document.getElementById('actionViewCount');
+        const showMetaToggle = document.getElementById('showMetaToggle');
+        const showTimeToggle = document.getElementById('showTimeToggle');
+        const postMeta = document.querySelector('.post-meta');
+        const postTime = document.getElementById('previewPostTime');
 
         function formatNumber(num) {
             if (num >= 10000) {
@@ -791,23 +808,41 @@
             }
         });
 
+        replyCountInput.addEventListener('input', function() {
+            const count = parseInt(this.value) || 0;
+            actionReplyCount.textContent = formatNumber(count);
+        });
+
         repostCountInput.addEventListener('input', function() {
             const count = parseInt(this.value) || 0;
-            previewRepostCount.textContent = formatNumber(count);
+            actionRepostCount.textContent = formatNumber(count);
         });
 
         likeCountInput.addEventListener('input', function() {
             const count = parseInt(this.value) || 0;
-            previewLikeCount.textContent = formatNumber(count);
-        });
-
-        bookmarkCountInput.addEventListener('input', function() {
-            const count = parseInt(this.value) || 0;
-            previewBookmarkCount.textContent = formatNumber(count);
+            actionLikeCount.textContent = formatNumber(count);
         });
 
         viewCountInput.addEventListener('input', function() {
+            const count = parseInt(this.value) || 0;
+            actionViewCount.textContent = formatNumber(count);
             updateDateTime();
+        });
+
+        showMetaToggle.addEventListener('change', function() {
+            if (this.checked) {
+                postMeta.classList.remove('hidden');
+            } else {
+                postMeta.classList.add('hidden');
+            }
+        });
+
+        showTimeToggle.addEventListener('change', function() {
+            if (this.checked) {
+                postTime.classList.remove('hidden');
+            } else {
+                postTime.classList.add('hidden');
+            }
         });
 
         downloadBtn.addEventListener('click', async function() {
