@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html lang="ja">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>X風投稿ジェネレーター</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.1/cropper.min.css">
     <style>
         * {
             margin: 0;
@@ -60,7 +60,8 @@
         }
 
         input[type="text"],
-        input[type="number"] {
+        input[type="number"],
+        input[type="datetime-local"] {
             width: 100%;
             background-color: #000;
             border: 1px solid #2f3336;
@@ -72,136 +73,9 @@
             outline: none;
         }
 
-        /* デフォルト（ライトモード）: 白背景 + 黒文字 + 黒カレンダー */
-        input[type="datetime-local"] {
-            width: 100%;
-            background-color: #ffffff !important;
-            background: #ffffff !important;
-            border: 1px solid #2f3336 !important;
-            border-radius: 4px !important;
-            padding: 8px 12px !important;
-            color: #000000 !important;
-            -webkit-text-fill-color: #000000 !important;
-            font-size: 15px !important;
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif !important;
-            outline: none !important;
-            cursor: pointer !important;
-            -webkit-appearance: none !important;
-            -moz-appearance: none !important;
-            appearance: none !important;
-        }
-
-        /* ライトモードを明示的に指定（デフォルトとno-preference） */
-        @media (prefers-color-scheme: light), (prefers-color-scheme: no-preference) {
-            input[type="datetime-local"] {
-                background-color: #ffffff !important;
-                background: #ffffff !important;
-                color: #000000 !important;
-                -webkit-text-fill-color: #000000 !important;
-            }
-
-            input[type="datetime-local"]::-webkit-calendar-picker-indicator {
-                background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>') !important;
-            }
-
-            input[type="datetime-local"]::-webkit-datetime-edit,
-            input[type="datetime-local"]::-webkit-datetime-edit-fields-wrapper,
-            input[type="datetime-local"]::-webkit-datetime-edit-text,
-            input[type="datetime-local"]::-webkit-datetime-edit-month-field,
-            input[type="datetime-local"]::-webkit-datetime-edit-day-field,
-            input[type="datetime-local"]::-webkit-datetime-edit-year-field,
-            input[type="datetime-local"]::-webkit-datetime-edit-hour-field,
-            input[type="datetime-local"]::-webkit-datetime-edit-minute-field,
-            input[type="datetime-local"]::-webkit-datetime-edit-ampm-field {
-                color: #000000 !important;
-                -webkit-text-fill-color: #000000 !important;
-                background: transparent !important;
-                background-color: transparent !important;
-            }
-        }
-
         input[type="datetime-local"]::-webkit-calendar-picker-indicator {
-            cursor: pointer !important;
-            opacity: 1 !important;
-            filter: none !important;
-            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>') !important;
-            background-repeat: no-repeat !important;
-            background-position: center !important;
-            background-size: 16px 16px !important;
-            width: 20px !important;
-            height: 20px !important;
-        }
-
-        input[type="datetime-local"]::-webkit-datetime-edit {
-            color: #000000 !important;
-            -webkit-text-fill-color: #000000 !important;
-            background: transparent !important;
-            padding: 0 !important;
-        }
-
-        input[type="datetime-local"]::-webkit-datetime-edit-fields-wrapper {
-            background: transparent !important;
-            color: #000000 !important;
-        }
-
-        input[type="datetime-local"]::-webkit-datetime-edit-text {
-            color: #000000 !important;
-            -webkit-text-fill-color: #000000 !important;
-            padding: 0 2px !important;
-        }
-
-        input[type="datetime-local"]::-webkit-datetime-edit-month-field,
-        input[type="datetime-local"]::-webkit-datetime-edit-day-field,
-        input[type="datetime-local"]::-webkit-datetime-edit-year-field,
-        input[type="datetime-local"]::-webkit-datetime-edit-hour-field,
-        input[type="datetime-local"]::-webkit-datetime-edit-minute-field,
-        input[type="datetime-local"]::-webkit-datetime-edit-ampm-field {
-            color: #000000 !important;
-            -webkit-text-fill-color: #000000 !important;
-            background: transparent !important;
-            padding: 0 2px !important;
-        }
-
-        /* ダークモード: 黒背景 + 白文字 + 白カレンダー */
-        @media (prefers-color-scheme: dark) {
-            input[type="datetime-local"] {
-                background-color: #000000 !important;
-                background: #000000 !important;
-                border: 1px solid #2f3336 !important;
-                color: #ffffff !important;
-                -webkit-text-fill-color: #ffffff !important;
-            }
-
-            input[type="datetime-local"]::-webkit-calendar-picker-indicator {
-                background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>') !important;
-            }
-
-            input[type="datetime-local"]::-webkit-datetime-edit {
-                color: #ffffff !important;
-                -webkit-text-fill-color: #ffffff !important;
-                background: transparent !important;
-            }
-
-            input[type="datetime-local"]::-webkit-datetime-edit-fields-wrapper {
-                color: #ffffff !important;
-                background: transparent !important;
-            }
-
-            input[type="datetime-local"]::-webkit-datetime-edit-text {
-                color: #ffffff !important;
-                -webkit-text-fill-color: #ffffff !important;
-            }
-
-            input[type="datetime-local"]::-webkit-datetime-edit-month-field,
-            input[type="datetime-local"]::-webkit-datetime-edit-day-field,
-            input[type="datetime-local"]::-webkit-datetime-edit-year-field,
-            input[type="datetime-local"]::-webkit-datetime-edit-hour-field,
-            input[type="datetime-local"]::-webkit-datetime-edit-minute-field,
-            input[type="datetime-local"]::-webkit-datetime-edit-ampm-field {
-                color: #ffffff !important;
-                -webkit-text-fill-color: #ffffff !important;
-                background: transparent !important;
-            }
+            filter: invert(1);
+            cursor: pointer;
         }
 
         input[type="text"]:focus,
@@ -265,6 +139,10 @@
 
         .char-count.error {
             color: #f4212e;
+        }
+
+        .post-preview-wrapper {
+            background-color: #000;
         }
 
         .post-preview {
@@ -338,6 +216,23 @@
             line-height: 20px;
         }
 
+        .post-time {
+            color: #71767b;
+            font-size: 15px;
+            font-weight: 400;
+            line-height: 20px;
+            margin-top: 4px;
+        }
+
+        .post-time.hidden {
+            display: none;
+        }
+
+        .post-time::before {
+            content: "";
+            margin: 0;
+        }
+
         .more-btn {
             margin-left: auto;
             color: #71767b;
@@ -393,19 +288,172 @@
             border-radius: 16px;
             overflow: hidden;
             border: 1px solid #2f3336;
-            max-height: 510px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+        }
+
+        .post-image-grid {
+            display: grid;
+            gap: 2px;
+            background-color: #2f3336;
+            width: 100%;
+        }
+
+        .post-image-grid.layout-1 {
+            grid-template-columns: 1fr;
+        }
+
+        .post-image-grid.layout-2 {
+            grid-template-columns: 1fr 1fr;
+        }
+
+        .post-image-grid.layout-3 {
+            grid-template-columns: 1fr 1fr;
+            grid-template-rows: 1fr 1fr;
+        }
+
+        .post-image-grid.layout-3 .post-image-item:first-child {
+            grid-row: 1 / span 2;
+        }
+
+        .post-image-grid.layout-4 {
+            grid-template-columns: 1fr 1fr;
+            grid-template-rows: 1fr 1fr;
+        }
+
+        .post-image-item {
+            position: relative;
+            width: 100%;
+            aspect-ratio: 16 / 9;
+            overflow: hidden;
             background-color: #000;
+        }
+
+        .post-image-grid.layout-2 .post-image-item,
+        .post-image-grid.layout-3 .post-image-item,
+        .post-image-grid.layout-4 .post-image-item {
+            aspect-ratio: auto;
+            height: 100%;
         }
 
         .post-image {
             width: 100%;
-            height: auto;
+            height: 100%;
             display: block;
-            max-height: 510px;
-            object-fit: contain;
+            object-fit: cover;
+        }
+
+        .post-image-item.exporting {
+            background-position: center;
+            background-size: cover;
+            background-repeat: no-repeat;
+        }
+
+        .post-image-grid.layout-1 .post-image-item {
+            aspect-ratio: 16 / 9;
+        }
+
+        .post-image-grid.aspect-rect {
+            aspect-ratio: 16 / 9;
+        }
+
+        .post-image-grid.aspect-square {
+            aspect-ratio: 1 / 1;
+        }
+
+        .post-image-grid.layout-2 .post-image-item:first-child {
+            border-top-left-radius: 14px;
+            border-bottom-left-radius: 14px;
+        }
+
+        .post-image-grid.layout-2 .post-image-item:last-child {
+            border-top-right-radius: 14px;
+            border-bottom-right-radius: 14px;
+        }
+
+        .post-image-grid.layout-3 .post-image-item:first-child {
+            border-top-left-radius: 14px;
+            border-bottom-left-radius: 14px;
+        }
+
+        .post-image-grid.layout-3 .post-image-item:nth-child(2) {
+            border-top-right-radius: 14px;
+        }
+
+        .post-image-grid.layout-3 .post-image-item:nth-child(3) {
+            border-bottom-right-radius: 14px;
+        }
+
+        .post-image-grid.layout-4 .post-image-item:first-child {
+            border-top-left-radius: 14px;
+        }
+
+        .post-image-grid.layout-4 .post-image-item:nth-child(2) {
+            border-top-right-radius: 14px;
+        }
+
+        .post-image-grid.layout-4 .post-image-item:nth-child(3) {
+            border-bottom-left-radius: 14px;
+        }
+
+        .post-image-grid.layout-4 .post-image-item:nth-child(4) {
+            border-bottom-right-radius: 14px;
+        }
+
+        .post-image-grid.aspect-rect.layout-2 {
+            grid-template-columns: 1.1fr 0.9fr;
+        }
+
+        .post-image-grid.aspect-rect.layout-3 {
+            grid-template-columns: 1fr 1fr;
+        }
+
+        .post-image-grid.aspect-rect.layout-4 {
+            grid-template-columns: 1fr 1fr;
+        }
+
+        .image-preview-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 10px;
+        }
+
+        .image-preview-item {
+            position: relative;
+            width: 64px;
+            height: 64px;
+            border-radius: 10px;
+            overflow: hidden;
+            border: 1px solid #2f3336;
+            background-color: #000;
+        }
+
+        .image-preview-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        .image-remove-btn {
+            position: absolute;
+            top: 4px;
+            right: 4px;
+            width: 20px;
+            height: 20px;
+            border-radius: 9999px;
+            border: none;
+            background-color: rgba(0, 0, 0, 0.6);
+            color: #fff;
+            font-size: 14px;
+            line-height: 20px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .image-remove-btn:hover {
+            background-color: rgba(0, 0, 0, 0.8);
         }
 
         .post-image-label {
@@ -425,6 +473,22 @@
             background-color: #1c1f23;
         }
 
+        .reply-image-label {
+            display: block;
+            padding: 8px 12px;
+            background-color: #000;
+            border: 1px solid #2f3336;
+            border-radius: 8px;
+            color: #e7e9ea;
+            cursor: pointer;
+            text-align: center;
+            font-size: 14px;
+        }
+
+        .reply-image-label:hover {
+            border-color: #1d9bf0;
+        }
+
         input[type="file"]#postImageInput {
             display: none;
         }
@@ -435,10 +499,22 @@
             padding: 0;
             margin: 16px 0 4px 0;
             line-height: 20px;
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 0;
+        }
+
+        .meta-sep {
+            margin: 0 4px;
         }
 
         .post-meta.hidden {
             display: none;
+        }
+
+        #previewViewCountText {
+            color: #e7e9ea;
         }
 
         .post-actions {
@@ -535,88 +611,6 @@
             background-color: rgba(29, 155, 240, 0.1);
         }
 
-        /* Crop modal styles */
-        .crop-modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.95);
-            z-index: 1000;
-            justify-content: center;
-            align-items: center;
-            padding: 20px;
-        }
-
-        .crop-modal.active {
-            display: flex;
-        }
-
-        .crop-container {
-            width: 100%;
-            max-width: 800px;
-            background-color: #16181c;
-            border-radius: 16px;
-            padding: 20px;
-            display: flex;
-            flex-direction: column;
-            gap: 16px;
-            max-height: 95vh;
-        }
-
-        .crop-image-container {
-            width: 100%;
-            height: auto;
-            max-height: 75vh;
-            overflow: hidden;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .crop-image-container img {
-            max-width: 100%;
-            max-height: 75vh;
-            display: block;
-        }
-
-        .crop-buttons {
-            display: flex;
-            gap: 12px;
-            justify-content: flex-end;
-        }
-
-        .crop-btn {
-            padding: 10px 20px;
-            border: none;
-            border-radius: 9999px;
-            font-size: 15px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: background-color 0.2s;
-        }
-
-        .crop-btn-cancel {
-            background-color: transparent;
-            border: 1px solid #2f3336;
-            color: #e7e9ea;
-        }
-
-        .crop-btn-cancel:hover {
-            background-color: rgba(255, 255, 255, 0.1);
-        }
-
-        .crop-btn-apply {
-            background-color: #1d9bf0;
-            color: white;
-        }
-
-        .crop-btn-apply:hover {
-            background-color: #1a8cd8;
-        }
-
         /* Light mode styles */
         body.light-mode {
             background-color: #f7f9f9;
@@ -637,6 +631,10 @@
             border-bottom: 1px solid #eff3f4;
         }
 
+        body.light-mode .post-preview-wrapper {
+            background-color: #ffffff;
+        }
+
         body.light-mode .theme-toggle {
             border-bottom: 1px solid #eff3f4;
         }
@@ -652,6 +650,10 @@
             background-color: #ffffff;
             border-color: #cfd9de;
             color: #0f1419;
+        }
+
+        body.light-mode input[type="datetime-local"]::-webkit-calendar-picker-indicator {
+            filter: none;
         }
 
         body.light-mode textarea {
@@ -689,19 +691,26 @@
             background-color: #eff3f4;
         }
 
+        body.light-mode .reply-image-label {
+            background-color: #ffffff;
+            border-color: #cfd9de;
+            color: #0f1419;
+        }
+
         body.light-mode .display-name,
         body.light-mode .post-content {
             color: #0f1419;
         }
 
         body.light-mode .username,
+        body.light-mode .post-time,
         body.light-mode .post-meta,
         body.light-mode .action-item {
             color: #536471;
         }
 
-        body.light-mode #previewViewCount {
-            color: #0f1419 !important;
+        body.light-mode #previewViewCountText {
+            color: #0f1419;
         }
 
         body.light-mode .more-btn {
@@ -716,169 +725,578 @@
             border-color: #cfd9de;
         }
 
-        body.light-mode .crop-modal {
-            background-color: rgba(255, 255, 255, 0.95);
-        }
-
-        body.light-mode .crop-container {
+        body.light-mode select {
             background-color: #ffffff;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-        }
-
-        body.light-mode .crop-btn-cancel {
             border-color: #cfd9de;
             color: #0f1419;
         }
+
+        /* Reply styles */
+        .replies-container {
+            border-top: 1px solid #2f3336;
+            background-color: #000;
+        }
+
+        .replies-header {
+            padding: 10px 16px 6px 16px;
+            font-size: 14px;
+            font-weight: 700;
+            color: #e7e9ea;
+        }
+
+        .reply-item {
+            position: relative;
+            display: flex;
+            gap: 12px;
+            padding: 12px 16px;
+            padding-left: calc(16px + (var(--nest-level, 0) * 24px));
+            border-bottom: 1px solid #2f3336;
+        }
+
+        .reply-item.nested {
+            padding-left: calc(16px + (var(--nest-level, 1) * 24px));
+        }
+
+        .reply-item.nested::before {
+            content: '';
+            position: absolute;
+            left: calc(28px + ((var(--nest-level, 1) - 1) * 24px));
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background-color: #2f3336;
+        }
+
+        .reply-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #7856ff, #1d9bf0);
+            flex-shrink: 0;
+            overflow: hidden;
+        }
+
+        .reply-body {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .reply-user-name {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            flex-wrap: wrap;
+        }
+
+        .reply-display-name {
+            font-weight: 700;
+            font-size: 15px;
+            color: #e7e9ea;
+        }
+
+        .reply-username,
+        .reply-time {
+            color: #71767b;
+            font-size: 14px;
+        }
+
+        .reply-meta-line {
+            color: #71767b;
+            font-size: 13px;
+            margin-top: 2px;
+        }
+
+        .reply-meta-line span {
+            color: #1d9bf0;
+        }
+
+        .reply-content {
+            font-size: 15px;
+            line-height: 20px;
+            color: #e7e9ea;
+            margin: 6px 0 8px 0;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+
+        .reply-media {
+            margin: 8px 0 6px 0;
+        }
+
+        .reply-actions {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            color: #71767b;
+            font-size: 13px;
+        }
+
+        .reply-action-btn {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            color: inherit;
+            cursor: pointer;
+            background: none;
+            border: none;
+            padding: 4px 0;
+            transition: color 0.2s;
+        }
+
+        .reply-action-btn:hover {
+            color: #1d9bf0;
+        }
+
+        .reply-action-icon {
+            width: 16px;
+            height: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .reply-action-icon svg {
+            width: 16px;
+            height: 16px;
+        }
+
+        .reply-action-count {
+            font-size: 12px;
+            line-height: 16px;
+        }
+
+        .reply-action-count:empty {
+            display: none;
+        }
+
+        .add-reply-section {
+            background-color: #16181c;
+            border-radius: 8px;
+            padding: 16px;
+            margin-top: 16px;
+            border: 1px solid #2f3336;
+        }
+
+        .reply-form {
+            margin-top: 12px;
+            padding: 12px;
+            background-color: #000;
+            border-radius: 8px;
+            border: 1px solid #2f3336;
+            display: none;
+        }
+
+        .reply-form.active {
+            display: block;
+        }
+
+        .reply-form-inputs {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-bottom: 12px;
+        }
+
+        .reply-form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+
+        .reply-form textarea {
+            width: 100%;
+            min-height: 60px;
+            background-color: #16181c;
+            border: 1px solid #2f3336;
+            border-radius: 4px;
+            padding: 8px 12px;
+            color: #e7e9ea;
+            font-size: 15px;
+            font-family: inherit;
+            resize: vertical;
+        }
+
+        .reply-form-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 8px;
+        }
+
+        .reply-form-btn {
+            padding: 8px 16px;
+            border-radius: 9999px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            border: none;
+            transition: all 0.2s;
+        }
+
+        .reply-form-btn.primary {
+            background-color: #1d9bf0;
+            color: white;
+        }
+
+        .reply-form-btn.primary:hover {
+            background-color: #1a8cd8;
+        }
+
+        .reply-form-btn.secondary {
+            background-color: transparent;
+            color: #e7e9ea;
+            border: 1px solid #2f3336;
+        }
+
+        .reply-form-btn.secondary:hover {
+            background-color: #16181c;
+        }
+
+        .delete-reply-btn {
+            color: #f4212e;
+            margin-left: 8px;
+        }
+
+        .delete-reply-btn:hover {
+            color: #ff5f6b;
+        }
+
+        /* Light mode reply styles */
+        body.light-mode .replies-container {
+            border-top: 1px solid #eff3f4;
+            background-color: #ffffff;
+        }
+
+        body.light-mode .reply-item {
+            border-bottom: 1px solid #eff3f4;
+        }
+
+        body.light-mode .reply-item.nested::before {
+            background-color: #cfd9de;
+        }
+
+        body.light-mode .reply-display-name,
+        body.light-mode .reply-content,
+        body.light-mode .replies-header {
+            color: #0f1419;
+        }
+
+        body.light-mode .reply-username,
+        body.light-mode .reply-time,
+        body.light-mode .reply-meta-line,
+        body.light-mode .reply-action-btn {
+            color: #536471;
+        }
+
+        body.light-mode .add-reply-section {
+            background-color: #f7f9f9;
+            border-color: #cfd9de;
+        }
+
+        body.light-mode .reply-form {
+            background-color: #ffffff;
+            border-color: #cfd9de;
+        }
+
+        body.light-mode .reply-form textarea {
+            background-color: #ffffff;
+            border-color: #cfd9de;
+            color: #0f1419;
+        }
+
+        body.light-mode .reply-form-btn.secondary {
+            color: #0f1419;
+            border-color: #cfd9de;
+        }
+
+        body.light-mode .reply-form-btn.secondary:hover {
+            background-color: #f7f9f9;
+        }
     </style>
 </head>
+
 <body>
     <div class="container">
         <div class="screen-container">
-        <div class="theme-toggle">
-            <button class="theme-toggle-btn" id="themeToggle">
-                <span id="themeIcon">☀️</span>
-                <span id="themeText">ライトモード</span>
-            </button>
-        </div>
-        <div class="input-area">
-            <div class="user-inputs">
-                <div class="input-group">
-                    <div class="input-label">アイコン画像</div>
-                    <div class="file-input-wrapper">
-                        <input type="file" id="avatarInput" accept="image/*">
-                        <label for="avatarInput" class="file-input-label">画像を選択</label>
+            <div class="theme-toggle">
+                <button class="theme-toggle-btn" id="themeToggle">
+                    <span id="themeIcon">☀️</span>
+                    <span id="themeText">ライトモード</span>
+                </button>
+            </div>
+            <div class="input-area">
+                <div class="user-inputs">
+                    <div class="input-group">
+                        <div class="input-label">アイコン画像</div>
+                        <div class="file-input-wrapper">
+                            <input type="file" id="avatarInput" accept="image/*">
+                            <label for="avatarInput" class="file-input-label">画像を選択</label>
+                        </div>
+                    </div>
+                    <div class="input-group">
+                        <div class="input-label">表示名</div>
+                        <input type="text" id="displayName" placeholder="ユーザー名" value="ユーザー名">
                     </div>
                 </div>
-                <div class="input-group">
-                    <div class="input-label">表示名</div>
-                    <input type="text" id="displayName" placeholder="ユーザー名" value="ユーザー名">
+                <div class="user-inputs">
+                    <div class="input-group">
+                        <div class="input-label">@ユーザーID</div>
+                        <input type="text" id="username" placeholder="username" value="username">
+                    </div>
+                    <div class="input-group">
+                        <div class="input-label">投稿日時</div>
+                        <input type="datetime-local" id="postDateTime" value="">
+                    </div>
                 </div>
+                <div class="stats-inputs">
+                    <div class="input-group">
+                        <div class="input-label">返信</div>
+                        <input type="number" id="replyCount" placeholder="12" value="12" min="0">
+                    </div>
+                    <div class="input-group">
+                        <div class="input-label">リポスト</div>
+                        <input type="number" id="repostCount" placeholder="567" value="567" min="0">
+                    </div>
+                    <div class="input-group">
+                        <div class="input-label">いいね</div>
+                        <input type="number" id="likeCount" placeholder="8901" value="8901" min="0">
+                    </div>
+                    <div class="input-group">
+                        <div class="input-label">ブックマーク</div>
+                        <input type="number" id="bookmarkCount" placeholder="89" value="89" min="0">
+                    </div>
+                    <div class="input-group">
+                        <div class="input-label">表示回数</div>
+                        <input type="number" id="viewCount" placeholder="1234000" value="1234000" min="0">
+                    </div>
+                </div>
+                <div class="toggle-group">
+                    <label class="toggle-label">
+                        <input type="checkbox" id="showMetaToggle" checked>
+                        <span>表示と日付を表示</span>
+                    </label>
+                </div>
+                <div class="toggle-group">
+                    <label class="toggle-label">
+                        <input type="checkbox" id="showTimeToggle" checked>
+                        <span>投稿時間を表示</span>
+                    </label>
+                </div>
+                <div class="toggle-group">
+                    <button class="reply-form-btn secondary" id="randomizeBtn" type="button">ランダムで設定</button>
+                </div>
+                <textarea id="postInput" placeholder="いまどうしてる？" maxlength="280"></textarea>
+                <input type="file" id="postImageInput" accept="image/*" multiple>
+                <label for="postImageInput" class="post-image-label">📷 画像を追加（最大4枚）</label>
+                <div class="input-group" style="margin-top: 10px;">
+                    <div class="input-label">複数画像の比率</div>
+                    <select id="multiImageAspect"
+                        style="width: 100%; background-color: #000; border: 1px solid #2f3336; border-radius: 4px; padding: 8px 12px; color: #e7e9ea; font-size: 15px; font-family: inherit; outline: none;">
+                        <option value="rect">16:9 寄り</option>
+                        <option value="square">1:1 寄り</option>
+                    </select>
+                </div>
+                <div class="image-preview-list" id="postImagePreviewList"></div>
+                <div class="char-count" id="charCount">0 / 280</div>
             </div>
-            <div class="user-inputs">
-                <div class="input-group">
-                    <div class="input-label">@ユーザーID</div>
-                    <input type="text" id="username" placeholder="username" value="username">
-                </div>
-                <div class="input-group">
-                    <div class="input-label">投稿日時</div>
-                    <input type="datetime-local" id="postDateTime" value="">
-                </div>
-            </div>
-            <div class="stats-inputs">
-                <div class="input-group">
-                    <div class="input-label">返信</div>
-                    <input type="number" id="replyCount" placeholder="12" value="12" min="0">
-                </div>
-                <div class="input-group">
-                    <div class="input-label">リポスト</div>
-                    <input type="number" id="repostCount" placeholder="567" value="567" min="0">
-                </div>
-                <div class="input-group">
-                    <div class="input-label">いいね</div>
-                    <input type="number" id="likeCount" placeholder="8901" value="8901" min="0">
-                </div>
-                <div class="input-group">
-                    <div class="input-label">ブックマーク</div>
-                    <input type="number" id="bookmarkCount" placeholder="89" value="89" min="0">
-                </div>
-                <div class="input-group">
-                    <div class="input-label">表示回数</div>
-                    <input type="number" id="viewCount" placeholder="1234000" value="1234000" min="0">
-                </div>
-            </div>
-            <div class="toggle-group">
-                <label class="toggle-label">
-                    <input type="checkbox" id="showMetaToggle" checked>
-                    <span>表示と日付を表示</span>
-                </label>
-            </div>
-            <textarea
-                id="postInput"
-                placeholder="いまどうしてる？"
-                maxlength="280"
-            ></textarea>
-            <input type="file" id="postImageInput" accept="image/*">
-            <label for="postImageInput" class="post-image-label">📷 画像を追加</label>
-            <div class="char-count" id="charCount">0 / 280</div>
-        </div>
 
-        <div class="post-preview" id="postPreview">
-            <div class="post-header">
-                <div class="avatar" id="avatarPreview">
-                    <div class="avatar-placeholder"></div>
-                </div>
-                <div class="user-info">
-                    <div class="user-name-row">
-                        <span class="display-name" id="previewDisplayName">ユーザー名</span>
-                        <span class="username" id="previewUsername">@username</span>
+            <div class="post-preview-wrapper" id="postPreviewWrapper">
+                <div class="post-preview" id="postPreview">
+                    <div class="post-header">
+                        <div class="avatar" id="avatarPreview">
+                            <div class="avatar-placeholder"></div>
+                        </div>
+                        <div class="user-info">
+                            <div class="user-name-row">
+                                <span class="display-name" id="previewDisplayName">ユーザー名</span>
+                                <span class="username" id="previewUsername">@username</span>
+                            </div>
+                            <span class="post-time" id="previewPostTime">1時間</span>
+                        </div>
+                        <div class="more-btn">
+                            <svg viewBox="0 0 24 24" width="18.75" height="18.75" fill="currentColor">
+                                <path
+                                    d="M3 12c0-1.1.9-2 2-2s2 .9 2 2-.9 2-2 2-2-.9-2-2zm9 2c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm7 0c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2z" />
+                            </svg>
+                        </div>
+                    </div>
+                    <div class="post-content" id="previewContent"></div>
+                    <div id="postImageContainer" style="display: none;"></div>
+                    <div class="post-meta">
+                        <span id="previewPostMetaText">午後11:30 · 2025年10月22日</span>
+                        <span class="meta-sep"> · </span>
+                        <span style="font-weight: bold;" id="previewViewCountText">123.4万</span>
+                        <span class="meta-suffix"> 件の表示</span>
+                    </div>
+                    <div class="post-actions">
+                        <div class="action-item">
+                            <div class="action-icon">
+                                <svg viewBox="0 0 24 24" fill="currentColor">
+                                    <path
+                                        d="M1.751 10c0-4.42 3.584-8 8.005-8h4.366c4.49 0 8.129 3.64 8.129 8.13 0 2.96-1.607 5.68-4.196 7.11l-8.054 4.46v-3.69h-.067c-4.49.1-8.183-3.51-8.183-8.01zm8.005-6c-3.317 0-6.005 2.69-6.005 6 0 3.37 2.77 6.08 6.138 6.01l.351-.01h1.761v2.3l5.087-2.81c1.951-1.08 3.163-3.13 3.163-5.36 0-3.39-2.744-6.13-6.129-6.13H9.756z" />
+                                </svg>
+                            </div>
+                            <span class="action-count" id="actionReplyCount">12</span>
+                        </div>
+                        <div class="action-item">
+                            <div class="action-icon">
+                                <svg viewBox="0 0 24 24" fill="currentColor">
+                                    <path
+                                        d="M4.5 3.88l4.432 4.14-1.364 1.46L5.5 7.55V16c0 1.1.896 2 2 2H13v2H7.5c-2.209 0-4-1.79-4-4V7.55L1.432 9.48.068 8.02 4.5 3.88zM16.5 6H11V4h5.5c2.209 0 4 1.79 4 4v8.45l2.068-1.93 1.364 1.46-4.432 4.14-4.432-4.14 1.364-1.46 2.068 1.93V8c0-1.1-.896-2-2-2z" />
+                                </svg>
+                            </div>
+                            <span class="action-count" id="actionRepostCount">567</span>
+                        </div>
+                        <div class="action-item">
+                            <div class="action-icon">
+                                <svg viewBox="0 0 24 24" fill="currentColor">
+                                    <path
+                                        d="M16.697 5.5c-1.222-.06-2.679.51-3.89 2.16l-.805 1.09-.806-1.09C9.984 6.01 8.526 5.44 7.304 5.5c-1.243.07-2.349.78-2.91 1.91-.552 1.12-.633 2.78.479 4.82 1.074 1.97 3.257 4.27 7.129 6.61 3.87-2.34 6.052-4.64 7.126-6.61 1.111-2.04 1.03-3.7.477-4.82-.561-1.13-1.666-1.84-2.908-1.91zm4.187 7.69c-1.351 2.48-4.001 5.12-8.379 7.67l-.503.3-.504-.3c-4.379-2.55-7.029-5.19-8.382-7.67-1.36-2.5-1.41-4.86-.514-6.67.887-1.79 2.647-2.91 4.601-3.01 1.651-.09 3.368.56 4.798 2.01 1.429-1.45 3.146-2.1 4.796-2.01 1.954.1 3.714 1.22 4.601 3.01.896 1.81.846 4.17-.514 6.67z" />
+                                </svg>
+                            </div>
+                            <span class="action-count" id="actionLikeCount">8,901</span>
+                        </div>
+                        <div class="action-item">
+                            <div class="action-icon">
+                                <svg viewBox="0 0 24 24" fill="currentColor">
+                                    <path
+                                        d="M8.75 21V3h2v18h-2zM18 21V8.5h2V21h-2zM4 21l.004-10h2L6 21H4zm9.248 0v-7h2v7h-2z" />
+                                </svg>
+                            </div>
+                            <span class="action-count" id="actionViewCount">123.4万</span>
+                        </div>
+                        <div class="action-item">
+                            <div class="action-icon">
+                                <svg viewBox="0 0 24 24" fill="currentColor">
+                                    <path
+                                        d="M4 4.5C4 3.12 5.119 2 6.5 2h11C18.881 2 20 3.12 20 4.5v18.44l-8-5.71-8 5.71V4.5zM6.5 4c-.276 0-.5.22-.5.5v14.56l6-4.29 6 4.29V4.5c0-.28-.224-.5-.5-.5h-11z" />
+                                </svg>
+                            </div>
+                        </div>
+                        <div class="action-item">
+                            <div class="action-icon">
+                                <svg viewBox="0 0 24 24" fill="currentColor">
+                                    <path
+                                        d="M12 2.59l5.7 5.7-1.41 1.42L13 6.41V16h-2V6.41l-3.3 3.3-1.41-1.42L12 2.59zM21 15l-.02 3.51c0 1.38-1.12 2.49-2.5 2.49H5.5C4.11 21 3 19.88 3 18.5V15h2v3.5c0 .28.22.5.5.5h12.98c.28 0 .5-.22.5-.5L19 15h2z" />
+                                </svg>
+                            </div>
+                        </div>
                     </div>
                 </div>
-                <div class="more-btn">
-                    <svg viewBox="0 0 24 24" width="18.75" height="18.75" fill="currentColor"><path d="M3 12c0-1.1.9-2 2-2s2 .9 2 2-.9 2-2 2-2-.9-2-2zm9 2c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm7 0c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2z"/></svg>
-                </div>
-            </div>
-            <div class="post-content" id="previewContent"></div>
-            <div id="postImageContainer" style="display: none;"></div>
-            <div class="post-meta">
-                <span id="previewPostMeta">23:30 2025/10/22</span> · <span style="font-weight: bold; color: #e7e9ea;" id="previewViewCount">123.4万</span> 件の表示
-            </div>
-            <div class="post-actions">
-                <div class="action-item">
-                    <div class="action-icon">
-                        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M1.751 10c0-4.42 3.584-8 8.005-8h4.366c4.49 0 8.129 3.64 8.129 8.13 0 2.96-1.607 5.68-4.196 7.11l-8.054 4.46v-3.69h-.067c-4.49.1-8.183-3.51-8.183-8.01zm8.005-6c-3.317 0-6.005 2.69-6.005 6 0 3.37 2.77 6.08 6.138 6.01l.351-.01h1.761v2.3l5.087-2.81c1.951-1.08 3.163-3.13 3.163-5.36 0-3.39-2.744-6.13-6.129-6.13H9.756z"/></svg>
-                    </div>
-                    <span class="action-count" id="actionReplyCount">12</span>
-                </div>
-                <div class="action-item">
-                    <div class="action-icon">
-                        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M4.5 3.88l4.432 4.14-1.364 1.46L5.5 7.55V16c0 1.1.896 2 2 2H13v2H7.5c-2.209 0-4-1.79-4-4V7.55L1.432 9.48.068 8.02 4.5 3.88zM16.5 6H11V4h5.5c2.209 0 4 1.79 4 4v8.45l2.068-1.93 1.364 1.46-4.432 4.14-4.432-4.14 1.364-1.46 2.068 1.93V8c0-1.1-.896-2-2-2z"/></svg>
-                    </div>
-                    <span class="action-count" id="actionRepostCount">567</span>
-                </div>
-                <div class="action-item">
-                    <div class="action-icon">
-                        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M16.697 5.5c-1.222-.06-2.679.51-3.89 2.16l-.805 1.09-.806-1.09C9.984 6.01 8.526 5.44 7.304 5.5c-1.243.07-2.349.78-2.91 1.91-.552 1.12-.633 2.78.479 4.82 1.074 1.97 3.257 4.27 7.129 6.61 3.87-2.34 6.052-4.64 7.126-6.61 1.111-2.04 1.03-3.7.477-4.82-.561-1.13-1.666-1.84-2.908-1.91zm4.187 7.69c-1.351 2.48-4.001 5.12-8.379 7.67l-.503.3-.504-.3c-4.379-2.55-7.029-5.19-8.382-7.67-1.36-2.5-1.41-4.86-.514-6.67.887-1.79 2.647-2.91 4.601-3.01 1.651-.09 3.368.56 4.798 2.01 1.429-1.45 3.146-2.1 4.796-2.01 1.954.1 3.714 1.22 4.601 3.01.896 1.81.846 4.17-.514 6.67z"/></svg>
-                    </div>
-                    <span class="action-count" id="actionLikeCount">8,901</span>
-                </div>
-                <div class="action-item">
-                    <div class="action-icon">
-                        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M8.75 21V3h2v18h-2zM18 21V8.5h2V21h-2zM4 21l.004-10h2L6 21H4zm9.248 0v-7h2v7h-2z"/></svg>
-                    </div>
-                    <span class="action-count" id="actionViewCount">123.4万</span>
-                </div>
-                <div class="action-item">
-                    <div class="action-icon">
-                        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M4 4.5C4 3.12 5.119 2 6.5 2h11C18.881 2 20 3.12 20 4.5v18.44l-8-5.71-8 5.71V4.5zM6.5 4c-.276 0-.5.22-.5.5v14.56l6-4.29 6 4.29V4.5c0-.28-.224-.5-.5-.5h-11z"/></svg>
-                    </div>
-                </div>
-                <div class="action-item">
-                    <div class="action-icon">
-                        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.59l5.7 5.7-1.41 1.42L13 6.41V16h-2V6.41l-3.3 3.3-1.41-1.42L12 2.59zM21 15l-.02 3.51c0 1.38-1.12 2.49-2.5 2.49H5.5C4.11 21 3 19.88 3 18.5V15h2v3.5c0 .28.22.5.5.5h12.98c.28 0 .5-.22.5-.5L19 15h2z"/></svg>
-                    </div>
-                </div>
-            </div>
-        </div>
 
-        <button class="download-btn" id="downloadBtn" disabled>画像として保存</button>
+                <!-- Replies Display Container -->
+                <div class="replies-container" id="repliesContainer" style="display: none;">
+                    <div id="repliesDisplay"></div>
+                </div>
+            </div>
+
+            <!-- Replies Section -->
+            <div class="add-reply-section">
+                <h3 style="margin: 0 0 12px 0; font-size: 16px; font-weight: 700;">リプライを追加</h3>
+                <button class="reply-form-btn primary" id="addReplyBtn">新しいリプライを追加</button>
+
+                <div class="reply-form" id="mainReplyForm">
+                    <div class="reply-form-inputs">
+                        <div class="input-group">
+                            <div class="input-label">リプライ先</div>
+                            <select id="replyParentSelect"
+                                style="width: 100%; background-color: #000; border: 1px solid #2f3336; border-radius: 4px; padding: 8px 12px; color: #e7e9ea; font-size: 15px; font-family: inherit; outline: none;">
+                                <option value="">投稿へリプライ</option>
+                            </select>
+                        </div>
+                        <div class="reply-form-row">
+                            <div class="input-group">
+                                <div class="input-label">表示名</div>
+                                <input type="text" id="replyDisplayName" placeholder="ユーザー名" value="返信者">
+                            </div>
+                            <div class="input-group">
+                                <div class="input-label">@ユーザーID</div>
+                                <input type="text" id="replyUsername" placeholder="username" value="reply_user">
+                            </div>
+                        </div>
+                        <div class="input-group">
+                            <div class="input-label">リプライ内容</div>
+                            <textarea id="replyContent" placeholder="リプライを入力..." rows="3"></textarea>
+                        </div>
+                        <div class="input-group">
+                            <div class="input-label">リプライ画像（最大4枚）</div>
+                            <input type="file" id="replyImageInput" accept="image/*" multiple>
+                            <label for="replyImageInput" class="reply-image-label">画像を選択</label>
+                            <div class="image-preview-list" id="replyImagePreviewList"></div>
+                        </div>
+                        <div class="input-group">
+                            <div class="input-label">投稿時間</div>
+                            <input type="text" id="replyTime" placeholder="1時間" value="30分">
+                        </div>
+                    </div>
+                    <div class="reply-form-actions">
+                        <button class="reply-form-btn secondary" id="cancelReplyBtn">キャンセル</button>
+                        <button class="reply-form-btn primary" id="submitReplyBtn">リプライを追加</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="input-group" style="margin-bottom: 12px;">
+                <div class="input-label">出力サイズ</div>
+                <select id="outputSizeSelect"
+                    style="width: 100%; background-color: #000; border: 1px solid #2f3336; border-radius: 4px; padding: 8px 12px; color: #e7e9ea; font-size: 15px; font-family: inherit; outline: none;">
+                    <option value="original">オリジナル</option>
+                    <option value="1080" selected>1080 × 1080</option>
+                </select>
+            </div>
+            <button class="download-btn" id="downloadBtn" disabled>画像として保存</button>
         </div>
     </div>
 
     <!-- Crop Modal -->
-    <div class="crop-modal" id="cropModal">
-        <div class="crop-container">
-            <div class="crop-image-container">
-                <img id="cropImage" src="" style="max-width: 100%;">
+    <div id="cropModal"
+        style="display:none; position:fixed; inset:0; z-index:9999; background:rgba(0,0,0,0.85); justify-content:center; align-items:center; flex-direction:column;">
+        <div style="color:#e7e9ea; font-size:16px; margin-bottom:12px; text-align:center;">ドラッグで移動・スライダーで拡大縮小</div>
+        <div id="cropContainer"
+            style="position:relative; overflow:hidden; cursor:grab; border:2px solid #1d9bf0; border-radius:8px;">
+            <canvas id="cropCanvas" style="display:block;"></canvas>
+            <div id="cropOverlayTop"
+                style="position:absolute; top:0; left:0; right:0; background:rgba(0,0,0,0.55); pointer-events:none;">
             </div>
-            <div class="crop-buttons">
-                <button class="crop-btn crop-btn-cancel" id="cropCancel">キャンセル</button>
-                <button class="crop-btn crop-btn-apply" id="cropApply">適用</button>
+            <div id="cropOverlayBottom"
+                style="position:absolute; left:0; right:0; bottom:0; background:rgba(0,0,0,0.55); pointer-events:none;">
             </div>
+            <div id="cropOverlayLeft"
+                style="position:absolute; left:0; background:rgba(0,0,0,0.55); pointer-events:none;"></div>
+            <div id="cropOverlayRight"
+                style="position:absolute; right:0; background:rgba(0,0,0,0.55); pointer-events:none;"></div>
+            <div id="cropFrame"
+                style="position:absolute; border:2px dashed #1d9bf0; box-sizing:border-box; pointer-events:none;">
+                <!-- Corner resize handles -->
+                <div class="crop-handle" data-handle="tl"
+                    style="position:absolute;top:-6px;left:-6px;width:14px;height:14px;background:#1d9bf0;border-radius:2px;cursor:nwse-resize;pointer-events:auto;border:2px solid #fff;">
+                </div>
+                <div class="crop-handle" data-handle="tr"
+                    style="position:absolute;top:-6px;right:-6px;width:14px;height:14px;background:#1d9bf0;border-radius:2px;cursor:nesw-resize;pointer-events:auto;border:2px solid #fff;">
+                </div>
+                <div class="crop-handle" data-handle="bl"
+                    style="position:absolute;bottom:-6px;left:-6px;width:14px;height:14px;background:#1d9bf0;border-radius:2px;cursor:nesw-resize;pointer-events:auto;border:2px solid #fff;">
+                </div>
+                <div class="crop-handle" data-handle="br"
+                    style="position:absolute;bottom:-6px;right:-6px;width:14px;height:14px;background:#1d9bf0;border-radius:2px;cursor:nwse-resize;pointer-events:auto;border:2px solid #fff;">
+                </div>
+            </div>
+        </div>
+        <div
+            style="display:flex; align-items:center; gap:10px; margin-top:14px; color:#e7e9ea; font-size:13px; width:100%; max-width:400px; justify-content:center;">
+            <span>−</span>
+            <input type="range" id="cropZoomSlider" min="20" max="100" value="100"
+                style="flex:1; accent-color:#1d9bf0;">
+            <span>＋</span>
+        </div>
+        <div style="display:flex; gap:12px; margin-top:14px;">
+            <button id="cropCancel"
+                style="padding:10px 28px; border-radius:9999px; border:1px solid #536471; background:transparent; color:#e7e9ea; font-size:15px; cursor:pointer;">キャンセル</button>
+            <button id="cropConfirm"
+                style="padding:10px 28px; border-radius:9999px; border:none; background:#1d9bf0; color:#fff; font-size:15px; font-weight:bold; cursor:pointer;">トリミングして保存</button>
         </div>
     </div>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.1/cropper.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/dom-to-image-more@3.4.5/dist/dom-to-image-more.min.js"></script>
     <script>
         const postInput = document.getElementById('postInput');
         const charCount = document.getElementById('charCount');
@@ -890,10 +1308,14 @@
         const postDateTimeInput = document.getElementById('postDateTime');
         const avatarInput = document.getElementById('avatarInput');
         const postImageInput = document.getElementById('postImageInput');
+        const postImagePreviewList = document.getElementById('postImagePreviewList');
+        const multiImageAspect = document.getElementById('multiImageAspect');
         const previewDisplayName = document.getElementById('previewDisplayName');
         const previewUsername = document.getElementById('previewUsername');
+        const previewPostTime = document.getElementById('previewPostTime');
         const avatarPreview = document.getElementById('avatarPreview');
         const postImageContainer = document.getElementById('postImageContainer');
+        const postPreviewWrapper = document.getElementById('postPreviewWrapper');
         const replyCountInput = document.getElementById('replyCount');
         const repostCountInput = document.getElementById('repostCount');
         const likeCountInput = document.getElementById('likeCount');
@@ -904,15 +1326,23 @@
         const actionLikeCount = document.getElementById('actionLikeCount');
         const actionViewCount = document.getElementById('actionViewCount');
         const showMetaToggle = document.getElementById('showMetaToggle');
+        const showTimeToggle = document.getElementById('showTimeToggle');
         const postMeta = document.querySelector('.post-meta');
-
-        const cropModal = document.getElementById('cropModal');
-        const cropImage = document.getElementById('cropImage');
-        const cropCancel = document.getElementById('cropCancel');
-        const cropApply = document.getElementById('cropApply');
-
-        let cropper = null;
-        let currentCropType = null; // 'avatar' or 'post'
+        const postTime = document.getElementById('previewPostTime');
+        const randomizeBtn = document.getElementById('randomizeBtn');
+        const repliesContainer = document.getElementById('repliesContainer');
+        const repliesDisplay = document.getElementById('repliesDisplay');
+        const addReplyBtn = document.getElementById('addReplyBtn');
+        const mainReplyForm = document.getElementById('mainReplyForm');
+        const cancelReplyBtn = document.getElementById('cancelReplyBtn');
+        const submitReplyBtn = document.getElementById('submitReplyBtn');
+        const replyDisplayName = document.getElementById('replyDisplayName');
+        const replyUsername = document.getElementById('replyUsername');
+        const replyContent = document.getElementById('replyContent');
+        const replyTime = document.getElementById('replyTime');
+        const replyParentSelect = document.getElementById('replyParentSelect');
+        const replyImageInput = document.getElementById('replyImageInput');
+        const replyImagePreviewList = document.getElementById('replyImagePreviewList');
 
         function formatNumber(num) {
             if (num >= 10000) {
@@ -921,117 +1351,126 @@
             return num.toLocaleString();
         }
 
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text ?? '';
+            return div.innerHTML;
+        }
+
+        function getTimeAgo(dateTime) {
+            if (!dateTime) return '1時間';
+
+            const postDate = new Date(dateTime);
+            const now = new Date();
+            const diffMs = now - postDate;
+            const diffMins = Math.floor(diffMs / 60000);
+            const diffHours = Math.floor(diffMs / 3600000);
+            const diffDays = Math.floor(diffMs / 86400000);
+
+            if (diffMins < 1) return '今';
+            if (diffMins < 60) return `${diffMins}分`;
+            if (diffHours < 24) return `${diffHours}時間`;
+            if (diffDays < 7) return `${diffDays}日`;
+
+            const m = postDate.getMonth() + 1;
+            const d = postDate.getDate();
+            return `${m}月${d}日`;
+        }
+
         function formatDateTime(dateTime) {
-            if (!dateTime) return '23:30 2025/10/22';
+            if (!dateTime) return '午後11:30 · 2025年10月22日';
 
             const date = new Date(dateTime);
-            const hours = date.getHours().toString().padStart(2, '0');
+            const hours = date.getHours();
             const minutes = date.getMinutes().toString().padStart(2, '0');
+            const ampm = hours >= 12 ? '午後' : '午前';
+            const displayHours = hours % 12 || 12;
+
             const year = date.getFullYear();
-            const month = (date.getMonth() + 1).toString().padStart(2, '0');
-            const day = date.getDate().toString().padStart(2, '0');
+            const month = date.getMonth() + 1;
+            const day = date.getDate();
 
-            return `${hours}:${minutes} ${year}/${month}/${day}`;
+            return `${ampm}${displayHours}:${minutes} · ${year}年${month}月${day}日`;
         }
 
-        function openCropModal(imageSrc, type) {
-            currentCropType = type;
-            cropModal.classList.add('active');
-            
-            // Destroy existing cropper
-            if (cropper) {
-                cropper.destroy();
-                cropper = null;
-            }
-
-            // Set image source and wait for load
-            cropImage.src = imageSrc;
-            cropImage.onload = function() {
-                const aspectRatio = type === 'avatar' ? 1 : NaN; // 1:1 for avatar, free for post
-                
-                cropper = new Cropper(cropImage, {
-                    aspectRatio: aspectRatio,
-                    viewMode: 0, // No restrictions
-                    dragMode: 'move',
-                    autoCropArea: 0.8,
-                    restore: false,
-                    modal: true,
-                    guides: true,
-                    center: true,
-                    highlight: true,
-                    cropBoxMovable: true,
-                    cropBoxResizable: true,
-                    toggleDragModeOnDblclick: false,
-                    responsive: true,
-                    checkCrossOrigin: false,
-                    checkOrientation: true,
-                    scalable: true,
-                    zoomable: true,
-                    zoomOnWheel: true,
-                    wheelZoomRatio: 0.1,
-                    minContainerWidth: 200,
-                    minContainerHeight: 200,
-                    minCropBoxWidth: 50,
-                    minCropBoxHeight: 50,
-                });
-            };
+        function ensurePreviewVisible() {
+            postPreview.classList.add('visible');
+            downloadBtn.disabled = false;
         }
 
-        function closeCropModal() {
-            cropModal.classList.remove('active');
-            if (cropper) {
-                cropper.destroy();
-                cropper = null;
+        function updateDateTime() {
+            const preview = document.getElementById('postPreview');
+            if (!preview) return;
+
+            const postTimeEl = preview.querySelector('#previewPostTime');
+            if (postTimeEl) {
+                postTimeEl.textContent = getTimeAgo(postDateTimeInput.value);
             }
-            currentCropType = null;
-            cropImage.src = '';
+
+            const count = parseInt(viewCountInput.value, 10) || 0;
+            const formatted = formatNumber(count);
+
+            const metaContainer = preview.querySelector('.post-meta');
+            if (!metaContainer) {
+                ensurePreviewVisible();
+                return;
+            }
+
+            let metaText = metaContainer.querySelector('#previewPostMetaText');
+            let viewText = metaContainer.querySelector('#previewViewCountText');
+
+            if (!metaText || !viewText) {
+                metaContainer.innerHTML = `
+                    <span id="previewPostMetaText"></span>
+                    <span class="meta-sep"> · </span>
+                    <span style="font-weight: bold;" id="previewViewCountText"></span>
+                    <span class="meta-suffix"> 件の表示</span>
+                `;
+                metaText = metaContainer.querySelector('#previewPostMetaText');
+                viewText = metaContainer.querySelector('#previewViewCountText');
+            }
+
+            if (metaText) metaText.textContent = formatDateTime(postDateTimeInput.value);
+            if (viewText) viewText.textContent = formatted;
+            ensurePreviewVisible();
         }
 
-        cropCancel.addEventListener('click', function() {
-            closeCropModal();
-            // Reset file inputs
-            if (currentCropType === 'avatar') {
-                avatarInput.value = '';
-            } else {
-                postImageInput.value = '';
-            }
-        });
+        function syncStatsFromInputs() {
+            const replies = parseInt(replyCountInput.value, 10) || 0;
+            const reposts = parseInt(repostCountInput.value, 10) || 0;
+            const likes = parseInt(likeCountInput.value, 10) || 0;
+            const views = parseInt(viewCountInput.value, 10) || 0;
 
-        cropApply.addEventListener('click', function() {
-            if (!cropper) return;
+            actionReplyCount.textContent = formatNumber(replies);
+            actionRepostCount.textContent = formatNumber(reposts);
+            actionLikeCount.textContent = formatNumber(likes);
+            actionViewCount.textContent = formatNumber(views);
+            updateDateTime();
+            ensurePreviewVisible();
+        }
 
-            const canvas = cropper.getCroppedCanvas({
-                maxWidth: currentCropType === 'avatar' ? 400 : 2000,
-                maxHeight: currentCropType === 'avatar' ? 400 : 2000,
-                fillColor: '#fff',
-                imageSmoothingEnabled: true,
-                imageSmoothingQuality: 'high',
-            });
+        function randomBetween(min, max) {
+            const low = Math.min(min, max);
+            const high = Math.max(min, max);
+            return Math.floor(Math.random() * (high - low + 1)) + low;
+        }
 
-            canvas.toBlob(function(blob) {
-                const url = URL.createObjectURL(blob);
-                
-                if (currentCropType === 'avatar') {
-                    avatarPreview.innerHTML = `<img src="${url}" alt="Avatar">`;
-                } else {
-                    postImageContainer.innerHTML = `
-                        <div class="post-image-container">
-                            <img src="${url}" class="post-image" alt="Post image">
-                        </div>
-                    `;
-                    postImageContainer.style.display = 'block';
-                }
-                
-                closeCropModal();
-            }, 'image/jpeg', 0.95);
-        });
+        function randomFloat(min, max) {
+            return Math.random() * (max - min) + min;
+        }
 
-        // デフォルト値を設定
-        const now = new Date();
-        now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
-        postDateTimeInput.value = now.toISOString().slice(0, 16);
+        // デフォルト値を設定（スクリプトはbody末尾なのでDOM構築済み）
+        if (!postDateTimeInput.value) {
+            const now = new Date();
+            now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
+            postDateTimeInput.value = now.toISOString().slice(0, 16);
+        }
 
-        postInput.addEventListener('input', function() {
+        // 初期表示を更新
+        updateDateTime();
+        syncStatsFromInputs();
+
+        postInput.addEventListener('input', function () {
             const length = this.value.length;
             charCount.textContent = `${length} / 280`;
 
@@ -1054,115 +1493,433 @@
             }
         });
 
-        displayNameInput.addEventListener('input', function() {
+        displayNameInput.addEventListener('input', function () {
             previewDisplayName.textContent = this.value || 'ユーザー名';
         });
 
-        usernameInput.addEventListener('input', function() {
+        usernameInput.addEventListener('input', function () {
             const username = this.value.replace(/^@/, '');
             previewUsername.textContent = '@' + (username || 'username');
         });
 
-        postDateTimeInput.addEventListener('change', function() {
+        postDateTimeInput.addEventListener('input', function () {
             updateDateTime();
         });
 
-        postDateTimeInput.addEventListener('input', function() {
+        postDateTimeInput.addEventListener('change', function () {
             updateDateTime();
         });
 
-        // 枠内クリックでカレンダーを開く
-        postDateTimeInput.addEventListener('click', function(e) {
-            if (e.target === this) {
-                this.showPicker();
+        postDateTimeInput.addEventListener('blur', function () {
+            updateDateTime();
+        });
+
+
+
+        // keep updates event-driven for clarity
+
+        avatarInput.addEventListener('change', function (e) {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function (event) {
+                    avatarPreview.innerHTML = `<img src="${event.target.result}" alt="Avatar">`;
+                };
+                reader.readAsDataURL(file);
             }
         });
 
-        function updateDateTime() {
-            const dateValue = postDateTimeInput.value;
-            if (dateValue) {
-                const previewPostMeta = document.getElementById('previewPostMeta');
-                if (previewPostMeta) {
-                    previewPostMeta.textContent = formatDateTime(dateValue);
+        let postImageDataUrls = [];
+
+        function renderPostImages() {
+            if (postImageDataUrls.length === 0) {
+                postImageContainer.innerHTML = '';
+                postImageContainer.style.display = 'none';
+                postImagePreviewList.innerHTML = '';
+                return;
+            }
+
+            const count = postImageDataUrls.length;
+            const layoutClass = `layout-${count}`;
+            const aspectClass = multiImageAspect.value === 'square' ? 'aspect-square' : 'aspect-rect';
+            const items = postImageDataUrls
+                .map(
+                    (src, index) =>
+                        `<div class="post-image-item"><img src="${src}" class="post-image" alt="Post image ${index + 1}"></div>`
+                )
+                .join('');
+
+            postImageContainer.innerHTML = `
+                <div class="post-image-container">
+                    <div class="post-image-grid ${layoutClass} ${aspectClass}">
+                        ${items}
+                    </div>
+                </div>
+            `;
+            postImageContainer.style.display = 'block';
+
+            postImagePreviewList.innerHTML = postImageDataUrls
+                .map(
+                    (src, index) => `
+                        <div class="image-preview-item">
+                            <img src="${src}" alt="Preview ${index + 1}">
+                            <button class="image-remove-btn" data-index="${index}" aria-label="Remove image">×</button>
+                        </div>
+                    `
+                )
+                .join('');
+        }
+
+        postImagePreviewList.addEventListener('click', function (e) {
+            const target = e.target;
+            if (target.classList.contains('image-remove-btn')) {
+                const index = parseInt(target.dataset.index, 10);
+                if (!Number.isNaN(index)) {
+                    postImageDataUrls.splice(index, 1);
+                    renderPostImages();
                 }
             }
-            const count = parseInt(viewCountInput.value) || 0;
-            const formatted = formatNumber(count);
-            const previewViewCount = document.getElementById('previewViewCount');
-            if (previewViewCount) {
-                previewViewCount.textContent = formatted;
+        });
+
+        multiImageAspect.addEventListener('change', function () {
+            renderPostImages();
+        });
+
+        postImageInput.addEventListener('change', function (e) {
+            const files = Array.from(e.target.files || []);
+            if (files.length > 4) {
+                alert('画像は最大4枚までです');
+            }
+            const limitedFiles = files.slice(0, 4);
+
+            if (limitedFiles.length === 0) {
+                postImageDataUrls = [];
+                renderPostImages();
+                return;
+            }
+
+            Promise.all(
+                limitedFiles.map(
+                    (file) =>
+                        new Promise((resolve) => {
+                            const reader = new FileReader();
+                            reader.onload = function (event) {
+                                resolve(event.target.result);
+                            };
+                            reader.readAsDataURL(file);
+                        })
+                )
+            ).then((dataUrls) => {
+                postImageDataUrls = dataUrls;
+                renderPostImages();
+                postImageInput.value = '';
+            });
+        });
+
+        if (randomizeBtn) {
+            randomizeBtn.addEventListener('click', function () {
+                const now = new Date();
+                const daysBack = randomBetween(0, 180);
+                const randomDate = new Date(now.getTime() - daysBack * 24 * 60 * 60 * 1000);
+                randomDate.setHours(randomBetween(0, 23), randomBetween(0, 59), 0, 0);
+                randomDate.setMinutes(randomDate.getMinutes() - randomDate.getTimezoneOffset());
+                postDateTimeInput.value = randomDate.toISOString().slice(0, 16);
+
+                const replies = randomBetween(100, 600);
+                const reposts = randomBetween(1000, 9000);
+                const likes = randomBetween(10000, 50000);
+                const bookmarks = randomBetween(1000, 2000);
+                const views = randomBetween(10000000, 5000000);
+
+                viewCountInput.value = views;
+                likeCountInput.value = likes;
+                repostCountInput.value = reposts;
+                replyCountInput.value = replies;
+                bookmarkCountInput.value = bookmarks;
+
+                syncStatsFromInputs();
+
+                postPreview.classList.add('visible');
+                downloadBtn.disabled = false;
+
+                postDateTimeInput.dispatchEvent(new Event('input', { bubbles: true }));
+                viewCountInput.dispatchEvent(new Event('input', { bubbles: true }));
+                likeCountInput.dispatchEvent(new Event('input', { bubbles: true }));
+                repostCountInput.dispatchEvent(new Event('input', { bubbles: true }));
+                replyCountInput.dispatchEvent(new Event('input', { bubbles: true }));
+                bookmarkCountInput.dispatchEvent(new Event('input', { bubbles: true }));
+            });
+        }
+
+        let replies = [];
+        let replyIdCounter = 1;
+        let replyImageDataUrls = [];
+
+        function updateReplyParentSelect() {
+            const current = replyParentSelect.value;
+            const options = [
+                { value: '', label: '投稿へリプライ' },
+                ...replies.map((reply) => {
+                    const username = reply.username.startsWith('@') ? reply.username : `@${reply.username}`;
+                    const safeLabel = `${escapeHtml(reply.displayName)} (${escapeHtml(username)})`;
+                    return { value: reply.id.toString(), label: safeLabel };
+                })
+            ];
+
+            replyParentSelect.innerHTML = options
+                .map((opt) => `<option value="${opt.value}">${opt.label}</option>`)
+                .join('');
+
+            if (options.some((opt) => opt.value === current)) {
+                replyParentSelect.value = current;
             }
         }
 
-        // 初期表示を更新
-        updateDateTime();
+        function renderReplyImages(dataUrls) {
+            if (!dataUrls || dataUrls.length === 0) return '';
+            const count = dataUrls.length;
+            const layoutClass = `layout-${count}`;
+            const aspectClass = count === 1 ? 'aspect-rect' : 'aspect-square';
+            const items = dataUrls
+                .map(
+                    (src, index) =>
+                        `<div class="post-image-item"><img src="${src}" class="post-image" alt="Reply image ${index + 1}"></div>`
+                )
+                .join('');
 
-        avatarInput.addEventListener('change', function(e) {
-            const file = e.target.files[0];
-            if (file) {
-                if (file.size > 10 * 1024 * 1024) {
-                    alert('画像ファイルが大きすぎます。10MB以下の画像を選択してください。');
-                    this.value = '';
-                    return;
+            return `
+                <div class="reply-media">
+                    <div class="post-image-container">
+                        <div class="post-image-grid ${layoutClass} ${aspectClass}">
+                            ${items}
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function buildRepliesHtml() {
+            if (replies.length === 0) {
+                repliesContainer.style.display = 'none';
+                repliesDisplay.innerHTML = '';
+                return;
+            }
+
+            repliesContainer.style.display = 'block';
+            postPreview.classList.add('visible');
+            downloadBtn.disabled = false;
+
+            const replyById = new Map(replies.map((reply) => [reply.id, reply]));
+            const childrenMap = new Map();
+            replies.forEach((reply) => {
+                const parentKey = reply.parentId ?? 0;
+                if (!childrenMap.has(parentKey)) childrenMap.set(parentKey, []);
+                childrenMap.get(parentKey).push(reply);
+            });
+
+            function renderNode(reply, depth) {
+                const safeDisplayName = escapeHtml(reply.displayName);
+                const safeUsernameValue = reply.username.startsWith('@') ? reply.username : `@${reply.username}`;
+                const safeUsername = escapeHtml(safeUsernameValue);
+                const parent = reply.parentId ? replyById.get(reply.parentId) : null;
+                const parentUsernameValue = parent ? (parent.username.startsWith('@') ? parent.username : `@${parent.username}`) : '';
+                const safeParentUsername = escapeHtml(parentUsernameValue);
+                const safeTime = escapeHtml(reply.time || '');
+                const nestedClass = depth > 0 ? 'nested' : '';
+                const metaLine = parent ? `<div class="reply-meta-line">リプライ先 <span>${safeParentUsername}</span></div>` : '';
+                const media = renderReplyImages(reply.images);
+                const children = childrenMap.get(reply.id) || [];
+                const safeContent = escapeHtml(reply.content || '');
+
+                const childHtml = children
+                    .map((child) => renderNode(child, Math.min(depth + 1, 3)))
+                    .join('');
+
+                return `
+                    <div class="reply-item ${nestedClass}" data-reply-id="${reply.id}" style="--nest-level: ${depth};">
+                        <div class="reply-avatar"></div>
+                        <div class="reply-body">
+                            <div class="reply-user-name">
+                                <span class="reply-display-name">${safeDisplayName}</span>
+                                <span class="reply-username">${safeUsername}</span>
+                                <span class="reply-time">· ${safeTime}</span>
+                            </div>
+                            ${metaLine}
+                            <div class="reply-content">${safeContent}</div>
+                            ${media}
+                            <div class="reply-actions">
+                                <button class="reply-action-btn" data-action="reply" data-reply-id="${reply.id}">
+                                    <span class="reply-action-icon">
+                                        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M1.751 10c0-4.42 3.584-8 8.005-8h4.366c4.49 0 8.129 3.64 8.129 8.13 0 2.96-1.607 5.68-4.196 7.11l-8.054 4.46v-3.69h-.067c-4.49.1-8.183-3.51-8.183-8.01zm8.005-6c-3.317 0-6.005 2.69-6.005 6 0 3.37 2.77 6.08 6.138 6.01l.351-.01h1.761v2.3l5.087-2.81c1.951-1.08 3.163-3.13 3.163-5.36 0-3.39-2.744-6.13-6.129-6.13H9.756z"/></svg>
+                                    </span>
+                                    <span class="reply-action-count"></span>
+                                </button>
+                                <button class="reply-action-btn" data-action="repost" data-reply-id="${reply.id}">
+                                    <span class="reply-action-icon">
+                                        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M4.5 3.88l4.432 4.14-1.364 1.46L5.5 7.55V16c0 1.1.896 2 2 2H13v2H7.5c-2.209 0-4-1.79-4-4V7.55L1.432 9.48.068 8.02 4.5 3.88zM16.5 6H11V4h5.5c2.209 0 4 1.79 4 4v8.45l2.068-1.93 1.364 1.46-4.432 4.14-4.432-4.14 1.364-1.46 2.068 1.93V8c0-1.1-.896-2-2-2z"/></svg>
+                                    </span>
+                                    <span class="reply-action-count"></span>
+                                </button>
+                                <button class="reply-action-btn" data-action="like" data-reply-id="${reply.id}">
+                                    <span class="reply-action-icon">
+                                        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M16.697 5.5c-1.222-.06-2.679.51-3.89 2.16l-.805 1.09-.806-1.09C9.984 6.01 8.526 5.44 7.304 5.5c-1.243.07-2.349.78-2.91 1.91-.552 1.12-.633 2.78.479 4.82 1.074 1.97 3.257 4.27 7.129 6.61 3.87-2.34 6.052-4.64 7.126-6.61 1.111-2.04 1.03-3.7.477-4.82-.561-1.13-1.666-1.84-2.908-1.91zm4.187 7.69c-1.351 2.48-4.001 5.12-8.379 7.67l-.503.3-.504-.3c-4.379-2.55-7.029-5.19-8.382-7.67-1.36-2.5-1.41-4.86-.514-6.67.887-1.79 2.647-2.91 4.601-3.01 1.651-.09 3.368.56 4.798 2.01 1.429-1.45 3.146-2.1 4.796-2.01 1.954.1 3.714 1.22 4.601 3.01.896 1.81.846 4.17-.514 6.67z"/></svg>
+                                    </span>
+                                    <span class="reply-action-count"></span>
+                                </button>
+                                <button class="reply-action-btn" data-action="share" data-reply-id="${reply.id}">
+                                    <span class="reply-action-icon">
+                                        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.59l5.7 5.7-1.41 1.42L13 6.41V16h-2V6.41l-3.3 3.3-1.41-1.42L12 2.59zM21 15l-.02 3.51c0 1.38-1.12 2.49-2.5 2.49H5.5C4.11 21 3 19.88 3 18.5V15h2v3.5c0 .28.22.5.5.5h12.98c.28 0 .5-.22.5-.5L19 15h2z"/></svg>
+                                    </span>
+                                    <span class="reply-action-count"></span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    ${childHtml}
+                `;
+            }
+
+            const roots = childrenMap.get(0) || [];
+            repliesDisplay.innerHTML = roots.map((reply) => renderNode(reply, 0)).join('');
+        }
+
+        function updateReplyCount() {
+            replyCountInput.value = replies.length;
+            actionReplyCount.textContent = formatNumber(replies.length);
+        }
+
+        function resetReplyForm() {
+            replyContent.value = '';
+            replyImageDataUrls = [];
+            replyImagePreviewList.innerHTML = '';
+            replyImageInput.value = '';
+            replyParentSelect.value = '';
+        }
+
+        addReplyBtn.addEventListener('click', function () {
+            mainReplyForm.classList.add('active');
+            replyContent.focus();
+        });
+
+        cancelReplyBtn.addEventListener('click', function () {
+            mainReplyForm.classList.remove('active');
+            resetReplyForm();
+        });
+
+        submitReplyBtn.addEventListener('click', function () {
+            const content = replyContent.value.trim();
+            if (!content && replyImageDataUrls.length === 0) {
+                alert('リプライ内容か画像を追加してください');
+                return;
+            }
+
+            const parentIdValue = replyParentSelect.value;
+            const parentId = parentIdValue ? parseInt(parentIdValue, 10) : null;
+
+            replies.push({
+                id: replyIdCounter++,
+                parentId,
+                displayName: replyDisplayName.value || '返信者',
+                username: replyUsername.value.replace(/^@/, '') || 'reply_user',
+                content,
+                time: replyTime.value || 'たった今',
+                images: replyImageDataUrls.slice()
+            });
+
+            updateReplyParentSelect();
+            buildRepliesHtml();
+            updateReplyCount();
+            resetReplyForm();
+            mainReplyForm.classList.remove('active');
+        });
+
+        replyImageInput.addEventListener('change', function (e) {
+            const files = Array.from(e.target.files || []);
+            if (files.length > 4) {
+                alert('リプライ画像は最大4枚までです');
+            }
+            const limitedFiles = files.slice(0, 4);
+
+            if (limitedFiles.length === 0) {
+                replyImageDataUrls = [];
+                replyImagePreviewList.innerHTML = '';
+                return;
+            }
+
+            Promise.all(
+                limitedFiles.map(
+                    (file) =>
+                        new Promise((resolve) => {
+                            const reader = new FileReader();
+                            reader.onload = function (event) {
+                                resolve(event.target.result);
+                            };
+                            reader.readAsDataURL(file);
+                        })
+                )
+            ).then((dataUrls) => {
+                replyImageDataUrls = dataUrls;
+                replyImagePreviewList.innerHTML = replyImageDataUrls
+                    .map(
+                        (src, index) => `
+                            <div class="image-preview-item">
+                                <img src="${src}" alt="Reply preview ${index + 1}">
+                                <button class="image-remove-btn" data-index="${index}" aria-label="Remove reply image">×</button>
+                            </div>
+                        `
+                    )
+                    .join('');
+                replyImageInput.value = '';
+            });
+        });
+
+        replyImagePreviewList.addEventListener('click', function (e) {
+            const target = e.target;
+            if (target.classList.contains('image-remove-btn')) {
+                const index = parseInt(target.dataset.index, 10);
+                if (!Number.isNaN(index)) {
+                    replyImageDataUrls.splice(index, 1);
+                    replyImagePreviewList.innerHTML = replyImageDataUrls
+                        .map(
+                            (src, idx) => `
+                                <div class="image-preview-item">
+                                    <img src="${src}" alt="Reply preview ${idx + 1}">
+                                    <button class="image-remove-btn" data-index="${idx}" aria-label="Remove reply image">×</button>
+                                </div>
+                            `
+                        )
+                        .join('');
                 }
-
-                const reader = new FileReader();
-                reader.onload = function(event) {
-                    openCropModal(event.target.result, 'avatar');
-                };
-                reader.onerror = function() {
-                    alert('アイコン画像の読み込みに失敗しました');
-                };
-                reader.readAsDataURL(file);
             }
         });
 
-        postImageInput.addEventListener('change', function(e) {
-            const file = e.target.files[0];
-            if (file) {
-                if (file.size > 10 * 1024 * 1024) {
-                    alert('画像ファイルが大きすぎます。10MB以下の画像を選択してください。');
-                    this.value = '';
-                    return;
-                }
-
-                const reader = new FileReader();
-                reader.onload = function(event) {
-                    openCropModal(event.target.result, 'post');
-                };
-                reader.onerror = function() {
-                    alert('画像の読み込みに失敗しました');
-                    postImageInput.value = '';
-                };
-                reader.readAsDataURL(file);
-            } else {
-                postImageContainer.innerHTML = '';
-                postImageContainer.style.display = 'none';
+        repliesDisplay.addEventListener('click', function (e) {
+            const target = e.target.closest('[data-action="reply"]');
+            if (!target) return;
+            const replyId = target.getAttribute('data-reply-id');
+            if (replyId) {
+                replyParentSelect.value = replyId;
+                mainReplyForm.classList.add('active');
+                replyContent.focus();
             }
         });
 
-        replyCountInput.addEventListener('input', function() {
-            const count = parseInt(this.value) || 0;
-            actionReplyCount.textContent = formatNumber(count);
-        });
+        function handleStatInputChange() {
+            syncStatsFromInputs();
+        }
 
-        repostCountInput.addEventListener('input', function() {
-            const count = parseInt(this.value) || 0;
-            actionRepostCount.textContent = formatNumber(count);
-        });
+        replyCountInput.addEventListener('input', handleStatInputChange);
+        replyCountInput.addEventListener('change', handleStatInputChange);
+        repostCountInput.addEventListener('input', handleStatInputChange);
+        repostCountInput.addEventListener('change', handleStatInputChange);
+        likeCountInput.addEventListener('input', handleStatInputChange);
+        likeCountInput.addEventListener('change', handleStatInputChange);
+        bookmarkCountInput.addEventListener('input', handleStatInputChange);
+        bookmarkCountInput.addEventListener('change', handleStatInputChange);
+        viewCountInput.addEventListener('input', handleStatInputChange);
+        viewCountInput.addEventListener('change', handleStatInputChange);
 
-        likeCountInput.addEventListener('input', function() {
-            const count = parseInt(this.value) || 0;
-            actionLikeCount.textContent = formatNumber(count);
-        });
-
-        viewCountInput.addEventListener('input', function() {
-            const count = parseInt(this.value) || 0;
-            actionViewCount.textContent = formatNumber(count);
-            updateDateTime();
-        });
-
-        showMetaToggle.addEventListener('change', function() {
+        showMetaToggle.addEventListener('change', function () {
             if (this.checked) {
                 postMeta.classList.remove('hidden');
             } else {
@@ -1170,26 +1927,342 @@
             }
         });
 
-        downloadBtn.addEventListener('click', async function() {
+        showTimeToggle.addEventListener('change', function () {
+            if (this.checked) {
+                postTime.classList.remove('hidden');
+            } else {
+                postTime.classList.add('hidden');
+            }
+        });
+
+        downloadBtn.addEventListener('click', async function () {
             try {
                 const bgColor = document.body.classList.contains('light-mode') ? '#ffffff' : '#000';
-                const canvas = await html2canvas(postPreview, {
-                    backgroundColor: bgColor,
-                    scale: 2,
-                    logging: false,
-                    useCORS: true,
-                    allowTaint: true
+                const grids = postPreviewWrapper.querySelectorAll('.post-image-grid');
+                const gridHeights = [];
+
+                grids.forEach((grid, index) => {
+                    const rect = grid.getBoundingClientRect();
+                    const isSquare = grid.classList.contains('aspect-square');
+                    const targetHeight = isSquare ? rect.width : rect.width * (9 / 16);
+                    gridHeights[index] = grid.style.height || '';
+                    grid.style.height = `${targetHeight}px`;
                 });
 
-                const link = document.createElement('a');
-                link.download = 'x-post.png';
-                link.href = canvas.toDataURL('image/png');
-                link.click();
+                const scale = Math.max(4, (window.devicePixelRatio || 1) * 3);
+                const nodeWidth = postPreviewWrapper.offsetWidth;
+                const nodeHeight = postPreviewWrapper.offsetHeight;
+
+                const canvas = await domtoimage.toCanvas(postPreviewWrapper, {
+                    width: nodeWidth * scale,
+                    height: nodeHeight * scale,
+                    style: {
+                        transform: `scale(${scale})`,
+                        transformOrigin: 'top left',
+                        width: nodeWidth + 'px',
+                        height: nodeHeight + 'px'
+                    },
+                    bgcolor: bgColor
+                });
+
+                grids.forEach((grid, index) => {
+                    grid.style.height = gridHeights[index];
+                });
+
+                const outputSize = document.getElementById('outputSizeSelect').value;
+
+                if (outputSize === '1080') {
+                    showCropModal(canvas, bgColor);
+                } else {
+                    const link = document.createElement('a');
+                    link.download = 'x-post.png';
+                    link.href = canvas.toDataURL('image/png');
+                    link.click();
+                }
             } catch (error) {
-                alert('画像の生成に失敗しました: ' + error.message);
+                alert('画像の生成に失敗しました');
                 console.error(error);
             }
         });
+
+        // ===== Crop Modal Logic =====
+        function showCropModal(sourceCanvas, bgColor) {
+            const modal = document.getElementById('cropModal');
+            const container = document.getElementById('cropContainer');
+            const cropCanvasEl = document.getElementById('cropCanvas');
+            const overlayTop = document.getElementById('cropOverlayTop');
+            const overlayBottom = document.getElementById('cropOverlayBottom');
+            const overlayLeft = document.getElementById('cropOverlayLeft');
+            const overlayRight = document.getElementById('cropOverlayRight');
+            const cropFrame = document.getElementById('cropFrame');
+            const zoomSlider = document.getElementById('cropZoomSlider');
+
+            // Scale source to fit display
+            const maxDisplayW = Math.min(420, window.innerWidth * 0.88);
+            const maxDisplayH = window.innerHeight * 0.6;
+            const fitScale = Math.min(maxDisplayW / sourceCanvas.width, maxDisplayH / sourceCanvas.height);
+            const displayW = Math.round(sourceCanvas.width * fitScale);
+            const displayH = Math.round(sourceCanvas.height * fitScale);
+
+            cropCanvasEl.width = displayW;
+            cropCanvasEl.height = displayH;
+            const ctx = cropCanvasEl.getContext('2d');
+            ctx.imageSmoothingEnabled = true;
+            ctx.imageSmoothingQuality = 'high';
+            ctx.drawImage(sourceCanvas, 0, 0, displayW, displayH);
+
+            container.style.width = displayW + 'px';
+            container.style.height = displayH + 'px';
+
+            // Crop state: size and position (in display px)
+            const minCropSize = Math.min(displayW, displayH) * 0.2;
+            const maxCropSize = Math.min(displayW, displayH);
+            let cropSize = maxCropSize; // start at 100%
+            let cropX = Math.round((displayW - cropSize) / 2);
+            let cropY = Math.round((displayH - cropSize) / 2);
+
+            // Slider range maps to crop size
+            zoomSlider.value = 100;
+
+            function clampPosition() {
+                cropX = Math.max(0, Math.min(displayW - cropSize, cropX));
+                cropY = Math.max(0, Math.min(displayH - cropSize, cropY));
+            }
+
+            function updateOverlays() {
+                clampPosition();
+                // Top
+                overlayTop.style.left = '0';
+                overlayTop.style.right = '0';
+                overlayTop.style.top = '0';
+                overlayTop.style.height = cropY + 'px';
+                // Bottom
+                overlayBottom.style.left = '0';
+                overlayBottom.style.right = '0';
+                overlayBottom.style.top = (cropY + cropSize) + 'px';
+                overlayBottom.style.bottom = '0';
+                overlayBottom.style.height = Math.max(0, displayH - cropY - cropSize) + 'px';
+                // Left
+                overlayLeft.style.top = cropY + 'px';
+                overlayLeft.style.left = '0';
+                overlayLeft.style.width = cropX + 'px';
+                overlayLeft.style.height = cropSize + 'px';
+                // Right
+                overlayRight.style.top = cropY + 'px';
+                overlayRight.style.right = '0';
+                overlayRight.style.width = Math.max(0, displayW - cropX - cropSize) + 'px';
+                overlayRight.style.height = cropSize + 'px';
+                // Frame
+                cropFrame.style.left = cropX + 'px';
+                cropFrame.style.top = cropY + 'px';
+                cropFrame.style.width = cropSize + 'px';
+                cropFrame.style.height = cropSize + 'px';
+            }
+            updateOverlays();
+            modal.style.display = 'flex';
+
+            // Zoom slider
+            zoomSlider.oninput = function () {
+                const pct = parseInt(this.value) / 100;
+                const newSize = Math.round(minCropSize + (maxCropSize - minCropSize) * pct);
+                const centerX = cropX + cropSize / 2;
+                const centerY = cropY + cropSize / 2;
+                cropSize = newSize;
+                cropX = Math.round(centerX - cropSize / 2);
+                cropY = Math.round(centerY - cropSize / 2);
+                updateOverlays();
+            };
+
+            // Mouse wheel zoom
+            function onWheel(e) {
+                e.preventDefault();
+                const delta = e.deltaY > 0 ? -5 : 5;
+                const newVal = Math.max(20, Math.min(100, parseInt(zoomSlider.value) + delta));
+                zoomSlider.value = newVal;
+                zoomSlider.oninput.call(zoomSlider);
+            }
+            container.addEventListener('wheel', onWheel, { passive: false });
+
+            // Drag handling (2D)
+            let dragging = false;
+            let dragStartX = 0, dragStartY = 0;
+            let dragStartCropX = 0, dragStartCropY = 0;
+
+            function getClientPos(e) {
+                if (e.touches && e.touches.length > 0) return { x: e.touches[0].clientX, y: e.touches[0].clientY };
+                return { x: e.clientX, y: e.clientY };
+            }
+
+            // Corner resize state
+            let resizing = false;
+            let resizeHandle = null;
+            let resizeStartX = 0, resizeStartY = 0;
+            let resizeStartCropX = 0, resizeStartCropY = 0, resizeStartCropSize = 0;
+
+            function onHandleDown(e) {
+                e.stopPropagation();
+                e.preventDefault();
+                const handle = e.target.closest('.crop-handle');
+                if (!handle) return;
+                resizing = true;
+                resizeHandle = handle.dataset.handle;
+                const pos = getClientPos(e);
+                resizeStartX = pos.x;
+                resizeStartY = pos.y;
+                resizeStartCropX = cropX;
+                resizeStartCropY = cropY;
+                resizeStartCropSize = cropSize;
+            }
+
+            function onHandleMove(e) {
+                if (!resizing) return;
+                e.preventDefault();
+                const pos = getClientPos(e);
+                const dx = pos.x - resizeStartX;
+                const dy = pos.y - resizeStartY;
+
+                // Use the larger absolute delta to determine resize amount, keeping square
+                let delta;
+                switch (resizeHandle) {
+                    case 'br':
+                        delta = Math.max(dx, dy);
+                        cropSize = Math.max(minCropSize, Math.min(maxCropSize, resizeStartCropSize + delta));
+                        cropX = resizeStartCropX;
+                        cropY = resizeStartCropY;
+                        break;
+                    case 'bl':
+                        delta = Math.max(-dx, dy);
+                        cropSize = Math.max(minCropSize, Math.min(maxCropSize, resizeStartCropSize + delta));
+                        cropX = resizeStartCropX - (cropSize - resizeStartCropSize);
+                        cropY = resizeStartCropY;
+                        break;
+                    case 'tr':
+                        delta = Math.max(dx, -dy);
+                        cropSize = Math.max(minCropSize, Math.min(maxCropSize, resizeStartCropSize + delta));
+                        cropX = resizeStartCropX;
+                        cropY = resizeStartCropY - (cropSize - resizeStartCropSize);
+                        break;
+                    case 'tl':
+                        delta = Math.max(-dx, -dy);
+                        cropSize = Math.max(minCropSize, Math.min(maxCropSize, resizeStartCropSize + delta));
+                        cropX = resizeStartCropX - (cropSize - resizeStartCropSize);
+                        cropY = resizeStartCropY - (cropSize - resizeStartCropSize);
+                        break;
+                }
+                // Sync slider
+                zoomSlider.value = Math.round(((cropSize - minCropSize) / (maxCropSize - minCropSize)) * 100);
+                updateOverlays();
+            }
+
+            function onHandleUp() {
+                resizing = false;
+                resizeHandle = null;
+            }
+
+            // Attach corner handle events
+            const handles = cropFrame.querySelectorAll('.crop-handle');
+            handles.forEach(h => {
+                h.addEventListener('mousedown', onHandleDown);
+                h.addEventListener('touchstart', onHandleDown, { passive: false });
+            });
+            window.addEventListener('mousemove', onHandleMove);
+            window.addEventListener('touchmove', onHandleMove, { passive: false });
+            window.addEventListener('mouseup', onHandleUp);
+            window.addEventListener('touchend', onHandleUp);
+
+            function onPointerDown(e) {
+                if (resizing) return;
+                dragging = true;
+                const pos = getClientPos(e);
+                dragStartX = pos.x;
+                dragStartY = pos.y;
+                dragStartCropX = cropX;
+                dragStartCropY = cropY;
+                container.style.cursor = 'grabbing';
+                e.preventDefault();
+            }
+            function onPointerMove(e) {
+                if (!dragging || resizing) return;
+                const pos = getClientPos(e);
+                cropX = dragStartCropX + (pos.x - dragStartX);
+                cropY = dragStartCropY + (pos.y - dragStartY);
+                updateOverlays();
+                e.preventDefault();
+            }
+            function onPointerUp() {
+                dragging = false;
+                container.style.cursor = 'grab';
+            }
+
+            container.addEventListener('mousedown', onPointerDown);
+            container.addEventListener('touchstart', onPointerDown, { passive: false });
+            window.addEventListener('mousemove', onPointerMove);
+            window.addEventListener('touchmove', onPointerMove, { passive: false });
+            window.addEventListener('mouseup', onPointerUp);
+            window.addEventListener('touchend', onPointerUp);
+
+            function cleanup() {
+                container.removeEventListener('mousedown', onPointerDown);
+                container.removeEventListener('touchstart', onPointerDown);
+                container.removeEventListener('wheel', onWheel);
+                window.removeEventListener('mousemove', onPointerMove);
+                window.removeEventListener('touchmove', onPointerMove);
+                window.removeEventListener('mouseup', onPointerUp);
+                window.removeEventListener('touchend', onPointerUp);
+                // Cleanup corner handle events
+                handles.forEach(h => {
+                    h.removeEventListener('mousedown', onHandleDown);
+                    h.removeEventListener('touchstart', onHandleDown);
+                });
+                window.removeEventListener('mousemove', onHandleMove);
+                window.removeEventListener('touchmove', onHandleMove);
+                window.removeEventListener('mouseup', onHandleUp);
+                window.removeEventListener('touchend', onHandleUp);
+                zoomSlider.oninput = null;
+                modal.style.display = 'none';
+            }
+
+            document.getElementById('cropCancel').onclick = cleanup;
+
+            document.getElementById('cropConfirm').onclick = function () {
+                // Map display coords back to source canvas coords
+                const srcScale = sourceCanvas.width / displayW;
+                const sx = Math.round(cropX * srcScale);
+                const sy = Math.round(cropY * srcScale);
+                const sSize = Math.round(cropSize * srcScale);
+
+                const finalCanvas = document.createElement('canvas');
+                finalCanvas.width = 1080;
+                finalCanvas.height = 1080;
+                const fctx = finalCanvas.getContext('2d');
+                fctx.imageSmoothingEnabled = true;
+                fctx.imageSmoothingQuality = 'high';
+
+                fctx.fillStyle = bgColor;
+                fctx.fillRect(0, 0, 1080, 1080);
+
+                // Clamp to source bounds
+                const drawW = Math.min(sSize, sourceCanvas.width - sx);
+                const drawH = Math.min(sSize, sourceCanvas.height - sy);
+                const destW = Math.round(drawW * (1080 / sSize));
+                const destH = Math.round(drawH * (1080 / sSize));
+                const destX = drawW < sSize ? Math.round((1080 - destW) / 2) : 0;
+                const destY = drawH < sSize ? Math.round((1080 - destH) / 2) : 0;
+
+                fctx.drawImage(
+                    sourceCanvas,
+                    sx, sy, drawW, drawH,
+                    destX, destY, destW, destH
+                );
+
+                const link = document.createElement('a');
+                link.download = 'x-post-1080.png';
+                link.href = finalCanvas.toDataURL('image/png');
+                link.click();
+
+                cleanup();
+            };
+        }
 
         // テーマ切り替え機能
         const themeToggle = document.getElementById('themeToggle');
@@ -1204,7 +2277,7 @@
             themeText.textContent = 'ダークモード';
         }
 
-        themeToggle.addEventListener('click', function() {
+        themeToggle.addEventListener('click', function () {
             document.body.classList.toggle('light-mode');
 
             if (document.body.classList.contains('light-mode')) {
@@ -1219,4 +2292,5 @@
         });
     </script>
 </body>
+
 </html>
