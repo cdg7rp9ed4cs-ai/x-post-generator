@@ -399,7 +399,7 @@
         }
 
         .post-image-grid.aspect-rect.layout-2 {
-            grid-template-columns: 1.1fr 0.9fr;
+            grid-template-columns: 1fr 1fr;
         }
 
         .post-image-grid.aspect-rect.layout-3 {
@@ -1587,16 +1587,23 @@
 
         postImageInput.addEventListener('change', function (e) {
             const files = Array.from(e.target.files || []);
-            if (files.length > 4) {
-                alert('画像は最大4枚までです');
-            }
-            const limitedFiles = files.slice(0, 4);
-
-            if (limitedFiles.length === 0) {
-                postImageDataUrls = [];
-                renderPostImages();
+            if (files.length === 0) {
+                // 何も選択されなかった場合は何もしない（既存の画像は保持）
                 return;
             }
+
+            const remainingSlots = 4 - postImageDataUrls.length;
+            if (remainingSlots <= 0) {
+                alert('画像は最大4枚までです');
+                postImageInput.value = '';
+                return;
+            }
+
+            if (files.length > remainingSlots) {
+                alert('画像は最大4枚までです');
+            }
+
+            const limitedFiles = files.slice(0, remainingSlots);
 
             Promise.all(
                 limitedFiles.map(
@@ -1610,7 +1617,8 @@
                         })
                 )
             ).then((dataUrls) => {
-                postImageDataUrls = dataUrls;
+                // 既存の画像に追加する
+                postImageDataUrls = postImageDataUrls.concat(dataUrls);
                 renderPostImages();
                 postImageInput.value = '';
             });
