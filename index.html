@@ -399,7 +399,7 @@
         }
 
         .post-image-grid.aspect-rect.layout-2 {
-            grid-template-columns: 1fr 1fr;
+            grid-template-columns: 1.1fr 0.9fr;
         }
 
         .post-image-grid.aspect-rect.layout-3 {
@@ -1077,7 +1077,7 @@
                 </div>
                 <div class="toggle-group">
                     <label class="toggle-label">
-                        <input type="checkbox" id="showTimeToggle" checked>
+                        <input type="checkbox" id="showTimeToggle">
                         <span>投稿時間を表示</span>
                     </label>
                 </div>
@@ -1110,7 +1110,7 @@
                                 <span class="display-name" id="previewDisplayName">ユーザー名</span>
                                 <span class="username" id="previewUsername">@username</span>
                             </div>
-                            <span class="post-time" id="previewPostTime">1時間</span>
+                            <span class="post-time hidden" id="previewPostTime">1時間</span>
                         </div>
                         <div class="more-btn">
                             <svg viewBox="0 0 24 24" width="18.75" height="18.75" fill="currentColor">
@@ -1587,23 +1587,16 @@
 
         postImageInput.addEventListener('change', function (e) {
             const files = Array.from(e.target.files || []);
-            if (files.length === 0) {
-                // 何も選択されなかった場合は何もしない（既存の画像は保持）
-                return;
-            }
-
-            const remainingSlots = 4 - postImageDataUrls.length;
-            if (remainingSlots <= 0) {
-                alert('画像は最大4枚までです');
-                postImageInput.value = '';
-                return;
-            }
-
-            if (files.length > remainingSlots) {
+            if (files.length > 4) {
                 alert('画像は最大4枚までです');
             }
+            const limitedFiles = files.slice(0, 4);
 
-            const limitedFiles = files.slice(0, remainingSlots);
+            if (limitedFiles.length === 0) {
+                postImageDataUrls = [];
+                renderPostImages();
+                return;
+            }
 
             Promise.all(
                 limitedFiles.map(
@@ -1617,8 +1610,7 @@
                         })
                 )
             ).then((dataUrls) => {
-                // 既存の画像に追加する
-                postImageDataUrls = postImageDataUrls.concat(dataUrls);
+                postImageDataUrls = dataUrls;
                 renderPostImages();
                 postImageInput.value = '';
             });
